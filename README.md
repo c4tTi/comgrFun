@@ -1,1 +1,1 @@
-# comgrFun - by Simon, Philip, Manuel, Marcel
+# comgrFun - by Simon, Philip, Marcel, Manuel
