@@ -1,0 +1,798 @@
+newmtl Yellow__plastic0
+Ka 0 0 0
+Ns 3.29074
+Ks 1 1 1
+Kd 0.921569 0.831373 0.0705882
+map_Kd Yellow__plasti0.jpg
+map_Bump Yellow__plasti1.jpg
+newmtl Pottery_clay0
+Ka 0 0 0
+Ns 2.31637
+Ks 0.129412 0.129412 0.129412
+Kd 0.027451 0.027451 0.027451
+map_Kd Pottery_clay0_1.jpg
+map_Bump Pottery_clay_b0_1.jpg
+newmtl Chrome0
+Ka 0 0 0
+Ns 114.434
+Ks 1 1 1
+Kd 0.681949 0.720702 0.73147
+map_Kd Chrome0_2.jpg
+map_Bump Chrome_b0_2.jpg
+newmtl Yellow__plastic1
+Ka 0 0 0
+Ns 3.29074
+Ks 1 1 1
+Kd 0.921569 0.831373 0.0705882
+map_Kd Yellow__plasti2_3.jpg
+map_Bump Yellow__plasti3_3.jpg
+newmtl Pottery_clay1
+Ka 0 0 0
+Ns 2.31637
+Ks 0.129412 0.129412 0.129412
+Kd 0.027451 0.027451 0.027451
+map_Kd Pottery_clay1_4.jpg
+map_Bump Pottery_clay_b1_4.jpg
+newmtl Yellow__plastic2
+Ka 0 0 0
+Ns 3.29074
+Ks 1 1 1
+Kd 0.921569 0.831373 0.0705882
+map_Kd Yellow__plasti4_5.jpg
+map_Bump Yellow__plasti5_5.jpg
+newmtl Metallic_Varnis0
+Ka 0 0 0
+Ns 3.32012
+Ks 0.733333 0.92549 1
+Kd 0.823529 0 0.0352941
+map_Kd Metallic_Varnis0_6.jpg
+map_Bump Metallic_Varnis1_6.jpg
+newmtl Metallic_Varnis1
+Ka 0 0 0
+Ns 3.32012
+Ks 0.733333 0.92549 1
+Kd 0.823529 0 0.0352941
+map_Kd Metallic_Varnis2_7.jpg
+map_Bump Metallic_Varnis3_7.jpg
+newmtl Yellow__plastic3
+Ka 0 0 0
+Ns 3.29074
+Ks 1 1 1
+Kd 0.921569 0.831373 0.0705882
+map_Kd Yellow__plasti6_8.jpg
+map_Bump Yellow__plasti7_8.jpg
+newmtl Pottery_clay2
+Ka 0 0 0
+Ns 2.31637
+Ks 0.129412 0.129412 0.129412
+Kd 0.027451 0.027451 0.027451
+map_Kd Pottery_clay2_9.jpg
+map_Bump Pottery_clay_b2_9.jpg
+newmtl parket20
+Ka 0 0 0
+Ns 2.03625
+Ks 1 1 1
+Kd 0.526473 0.221644 0.0362464
+map_Kd parket20_10.jpg
+map_Bump parket2_b0_10.jpg
+newmtl parket21
+Ka 0 0 0
+Ns 2.03625
+Ks 1 1 1
+Kd 0.526473 0.221644 0.0362464
+map_Kd parket21_11.jpg
+map_Bump parket2_b1_11.jpg
+newmtl Metallic_Varnis2
+Ka 0 0 0
+Ns 3.32012
+Ks 0.733333 0.92549 1
+Kd 0.823529 0 0.0352941
+map_Kd Metallic_Varnis4_12.jpg
+map_Bump Metallic_Varnis5_12.jpg
+newmtl Chrome1
+Ka 0 0 0
+Ns 114.434
+Ks 1 1 1
+Kd 0.681949 0.720702 0.73147
+map_Kd Chrome1_13.jpg
+map_Bump Chrome_b1_13.jpg
+newmtl Chrome2
+Ka 0 0 0
+Ns 114.434
+Ks 1 1 1
+Kd 0.681949 0.720702 0.73147
+map_Kd Chrome2_14.jpg
+map_Bump Chrome_b2_14.jpg
+newmtl Pewter0
+Ka 0 0 0
+Ns 20.0855
+Ks 0.835294 0.921569 1
+Kd 0.603922 0.603922 0.603922
+map_Kd Pewter0_15.jpg
+map_Bump Pewter_b0_15.jpg
+newmtl Pewter1
+Ka 0 0 0
+Ns 20.0855
+Ks 0.835294 0.921569 1
+Kd 0.603922 0.603922 0.603922
+map_Kd Pewter1_16.jpg
+map_Bump Pewter_b1_16.jpg
+newmtl Yellow__plastic4
+Ka 0 0 0
+Ns 3.29074
+Ks 1 1 1
+Kd 0.921569 0.831373 0.0705882
+map_Kd Yellow__plasti8_17.jpg
+map_Bump Yellow__plasti9_17.jpg
+newmtl Yellow__plastic5
+Ka 0 0 0
+Ns 3.29074
+Ks 1 1 1
+Kd 0.921569 0.831373 0.0705882
+map_Kd Yellow__plasti10_18.jpg
+map_Bump Yellow__plasti11_18.jpg
+newmtl Chrome3
+Ka 0 0 0
+Ns 114.434
+Ks 1 1 1
+Kd 0.681949 0.720702 0.73147
+map_Kd Chrome3_19.jpg
+map_Bump Chrome_b3_19.jpg
+newmtl Chrome4
+Ka 0 0 0
+Ns 114.434
+Ks 1 1 1
+Kd 0.681949 0.720702 0.73147
+map_Kd Chrome4_20.jpg
+map_Bump Chrome_b4_20.jpg
+newmtl Metallic_Varnis3
+Ka 0 0 0
+Ns 3.32012
+Ks 0.733333 0.92549 1
+Kd 0.823529 0 0.0352941
+map_Kd Metallic_Varnis6_21.jpg
+map_Bump Metallic_Varnis7_21.jpg
+newmtl Metallic_Varnis4
+Ka 0 0 0
+Ns 3.32012
+Ks 0.733333 0.92549 1
+Kd 0.823529 0 0.0352941
+map_Kd Metallic_Varnis8_22.jpg
+map_Bump Metallic_Varnis9_22.jpg
+newmtl Yellow__plastic6
+Ka 0 0 0
+Ns 3.29074
+Ks 1 1 1
+Kd 0.921569 0.831373 0.0705882
+map_Kd Yellow__plasti12_23.jpg
+map_Bump Yellow__plasti13_23.jpg
+newmtl Yellow__plastic7
+Ka 0 0 0
+Ns 3.29074
+Ks 1 1 1
+Kd 0.921569 0.831373 0.0705882
+map_Kd Yellow__plasti14_24.jpg
+map_Bump Yellow__plasti15_24.jpg
+newmtl Yellow__plastic8
+Ka 0 0 0
+Ns 3.29074
+Ks 1 1 1
+Kd 0.921569 0.831373 0.0705882
+map_Kd Yellow__plasti16_25.jpg
+map_Bump Yellow__plasti17_25.jpg
+newmtl Chrome5
+Ka 0 0 0
+Ns 114.434
+Ks 1 1 1
+Kd 0.681949 0.720702 0.73147
+map_Kd Chrome5_26.jpg
+map_Bump Chrome_b5_26.jpg
+newmtl GREEN_PLSTC
+Ka 0 0 0
+Ns 24.0467
+Ks 1 1 1
+Kd 0.0823529 0.670588 0.113725
+map_Kd GREEN_PLSTC_27.jpg
+map_Bump GREEN_PLSTC_b_27.jpg
+newmtl Chrome6
+Ka 0 0 0
+Ns 114.434
+Ks 1 1 1
+Kd 0.681949 0.720702 0.73147
+map_Kd Chrome6_28.jpg
+map_Bump Chrome_b6_28.jpg
+newmtl RED_PLASTIC
+Ka 0 0 0
+Ns 114.434
+Ks 1 1 1
+Kd 1 0 0
+map_Kd RED_PLASTIC_29.jpg
+map_Bump RED_PLASTIC_b_29.jpg
+newmtl Pewter2
+Ka 0 0 0
+Ns 20.0855
+Ks 0.835294 0.921569 1
+Kd 0.603922 0.603922 0.603922
+map_Kd Pewter2_30.jpg
+map_Bump Pewter_b2_30.jpg
+newmtl Chrome7
+Ka 0 0 0
+Ns 114.434
+Ks 1 1 1
+Kd 0.681949 0.720702 0.73147
+map_Kd Chrome7_31.jpg
+map_Bump Chrome_b7_31.jpg
+newmtl Chrome8
+Ka 0 0 0
+Ns 114.434
+Ks 1 1 1
+Kd 0.681949 0.720702 0.73147
+map_Kd Chrome8_32.jpg
+map_Bump Chrome_b8_32.jpg
+newmtl Dark_smoked_gl0
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl0_33.jpg
+map_Bump Dark_smoked_gl1_33.jpg
+newmtl Mirror0
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror0_34.jpg
+map_Bump Mirror_b0_34.jpg
+newmtl FUG0
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG0_35.jpg
+map_Bump FUG_b0_35.jpg
+newmtl Dark_smoked_gl1
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl2_36.jpg
+map_Bump Dark_smoked_gl3_36.jpg
+newmtl Mirror1
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror1_37.jpg
+map_Bump Mirror_b1_37.jpg
+newmtl FUG1
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG1_38.jpg
+map_Bump FUG_b1_38.jpg
+newmtl Dark_smoked_gl2
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl4_39.jpg
+map_Bump Dark_smoked_gl5_39.jpg
+newmtl Mirror2
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror2_40.jpg
+map_Bump Mirror_b2_40.jpg
+newmtl FUG2
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG2_41.jpg
+map_Bump FUG_b2_41.jpg
+newmtl Dark_smoked_gl3
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl6_42.jpg
+map_Bump Dark_smoked_gl7_42.jpg
+newmtl Mirror3
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror3_43.jpg
+map_Bump Mirror_b3_43.jpg
+newmtl FUG3
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG3_44.jpg
+map_Bump FUG_b3_44.jpg
+newmtl Dark_smoked_gl4
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl8_45.jpg
+map_Bump Dark_smoked_gl9_45.jpg
+newmtl Mirror4
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror4_46.jpg
+map_Bump Mirror_b4_46.jpg
+newmtl FUG4
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG4_47.jpg
+map_Bump FUG_b4_47.jpg
+newmtl Dark_smoked_gl5
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl10_48.jpg
+map_Bump Dark_smoked_gl11_48.jpg
+newmtl Mirror5
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror5_49.jpg
+map_Bump Mirror_b5_49.jpg
+newmtl FUG5
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG5_50.jpg
+map_Bump FUG_b5_50.jpg
+newmtl Dark_smoked_gl6
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl12_51.jpg
+map_Bump Dark_smoked_gl13_51.jpg
+newmtl Mirror6
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror6_52.jpg
+map_Bump Mirror_b6_52.jpg
+newmtl FUG6
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG6_53.jpg
+map_Bump FUG_b6_53.jpg
+newmtl Dark_smoked_gl7
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl14_54.jpg
+map_Bump Dark_smoked_gl15_54.jpg
+newmtl Mirror7
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror7_55.jpg
+map_Bump Mirror_b7_55.jpg
+newmtl FUG7
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG7_56.jpg
+map_Bump FUG_b7_56.jpg
+newmtl Dark_smoked_gl8
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl16_57.jpg
+map_Bump Dark_smoked_gl17_57.jpg
+newmtl Mirror8
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror8_58.jpg
+map_Bump Mirror_b8_58.jpg
+newmtl FUG8
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG8_59.jpg
+map_Bump FUG_b8_59.jpg
+newmtl Dark_smoked_gl9
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl18_60.jpg
+map_Bump Dark_smoked_gl19_60.jpg
+newmtl Mirror9
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror9_61.jpg
+map_Bump Mirror_b9_61.jpg
+newmtl FUG9
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG9_62.jpg
+map_Bump FUG_b9_62.jpg
+newmtl Dark_smoked_gl10
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl20_63.jpg
+map_Bump Dark_smoked_gl21_63.jpg
+newmtl Mirror10
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror10_64.jpg
+map_Bump Mirror_b10_64.jpg
+newmtl FUG10
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG10_65.jpg
+map_Bump FUG_b10_65.jpg
+newmtl Dark_smoked_gl11
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl22_66.jpg
+map_Bump Dark_smoked_gl23_66.jpg
+newmtl Mirror11
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror11_67.jpg
+map_Bump Mirror_b11_67.jpg
+newmtl FUG11
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG11_68.jpg
+map_Bump FUG_b11_68.jpg
+newmtl Dark_smoked_gl12
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl24_69.jpg
+map_Bump Dark_smoked_gl25_69.jpg
+newmtl Mirror12
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror12_70.jpg
+map_Bump Mirror_b12_70.jpg
+newmtl FUG12
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG12_71.jpg
+map_Bump FUG_b12_71.jpg
+newmtl Dark_smoked_gl13
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl26_72.jpg
+map_Bump Dark_smoked_gl27_72.jpg
+newmtl Mirror13
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror13_73.jpg
+map_Bump Mirror_b13_73.jpg
+newmtl FUG13
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG13_74.jpg
+map_Bump FUG_b13_74.jpg
+newmtl Dark_smoked_gl14
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl28_75.jpg
+map_Bump Dark_smoked_gl29_75.jpg
+newmtl Mirror14
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror14_76.jpg
+map_Bump Mirror_b14_76.jpg
+newmtl FUG14
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG14_77.jpg
+map_Bump FUG_b14_77.jpg
+newmtl Dark_smoked_gl15
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl30_78.jpg
+map_Bump Dark_smoked_gl31_78.jpg
+newmtl Mirror15
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror15_79.jpg
+map_Bump Mirror_b15_79.jpg
+newmtl FUG15
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG15_80.jpg
+map_Bump FUG_b15_80.jpg
+newmtl Dark_smoked_gl16
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl32_81.jpg
+map_Bump Dark_smoked_gl33_81.jpg
+newmtl Mirror16
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror16_82.jpg
+map_Bump Mirror_b16_82.jpg
+newmtl FUG16
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG16_83.jpg
+map_Bump FUG_b16_83.jpg
+newmtl Dark_smoked_gl17
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl34_84.jpg
+map_Bump Dark_smoked_gl35_84.jpg
+newmtl Mirror17
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror17_85.jpg
+map_Bump Mirror_b17_85.jpg
+newmtl FUG17
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG17_86.jpg
+map_Bump FUG_b17_86.jpg
+newmtl Dark_smoked_gl18
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl36_87.jpg
+map_Bump Dark_smoked_gl37_87.jpg
+newmtl Mirror18
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror18_88.jpg
+map_Bump Mirror_b18_88.jpg
+newmtl FUG18
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG18_89.jpg
+map_Bump FUG_b18_89.jpg
+newmtl Dark_smoked_gl19
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl38_90.jpg
+map_Bump Dark_smoked_gl39_90.jpg
+newmtl Mirror19
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror19_91.jpg
+map_Bump Mirror_b19_91.jpg
+newmtl FUG19
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG19_92.jpg
+map_Bump FUG_b19_92.jpg
+newmtl Dark_smoked_gl20
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl40_93.jpg
+map_Bump Dark_smoked_gl41_93.jpg
+newmtl Mirror20
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror20_94.jpg
+map_Bump Mirror_b20_94.jpg
+newmtl FUG20
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG20_95.jpg
+map_Bump FUG_b20_95.jpg
+newmtl Dark_smoked_gl21
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl42_96.jpg
+map_Bump Dark_smoked_gl43_96.jpg
+newmtl Mirror21
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror21_97.jpg
+map_Bump Mirror_b21_97.jpg
+newmtl FUG21
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG21_98.jpg
+map_Bump FUG_b21_98.jpg
+newmtl Dark_smoked_gl22
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl44_99.jpg
+map_Bump Dark_smoked_gl45_99.jpg
+newmtl Mirror22
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror22_100.jpg
+map_Bump Mirror_b22_100.jpg
+newmtl FUG22
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG22_101.jpg
+map_Bump FUG_b22_101.jpg
+newmtl Dark_smoked_gl23
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl46_102.jpg
+map_Bump Dark_smoked_gl47_102.jpg
+newmtl Mirror23
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror23_103.jpg
+map_Bump Mirror_b23_103.jpg
+newmtl FUG23
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG23_104.jpg
+map_Bump FUG_b23_104.jpg
+newmtl Dark_smoked_gl24
+Ka 0 0 0
+Ns 34.4669
+Ks 1 1 1
+Kd 0.498039 0.498039 0.498039
+map_Kd Dark_smoked_gl48_105.jpg
+map_Bump Dark_smoked_gl49_105.jpg
+newmtl Mirror24
+Ka 0 0 0
+Ns 66.6863
+Ks 1 0.752941 0.101961
+Kd 0.603922 0.603922 0.603922
+map_Kd Mirror24_106.jpg
+map_Bump Mirror_b24_106.jpg
+newmtl FUG24
+Ka 0 0 0
+Ns 1
+Ks 1 1 1
+Kd 0.105882 0.105882 0.105882
+map_Kd FUG24_107.jpg
+map_Bump FUG_b24_107.jpg
+newmtl parket22
+Ka 0 0 0
+Ns 2.03625
+Ks 1 1 1
+Kd 0.526473 0.221644 0.0362464
+map_Kd parket22_108.jpg
+map_Bump parket2_b2_108.jpg
+newmtl parket23
+Ka 0 0 0
+Ns 2.03625
+Ks 1 1 1
+Kd 0.526473 0.221644 0.0362464
+map_Kd parket23_109.jpg
+map_Bump parket2_b3_109.jpg
+newmtl Redwood0
+Ka 0 0 0
+Ns 8.16617
+Ks 0.52549 0.52549 0.52549
+Kd 0.351787 0.245227 0.21545
+map_Kd Redwood0_110.jpg
+map_Bump Redwood_b0_110.jpg
+newmtl Redwood1
+Ka 0 0 0
+Ns 8.16617
+Ks 0.52549 0.52549 0.52549
+Kd 0.351787 0.245227 0.21545
+map_Kd Redwood1_111.jpg
+map_Bump Redwood_b1_111.jpg
+newmtl Black_porcelaine
+Ka 0 0 0
+Ns 164.022
+Ks 1 1 1
+Kd 0.133333 0.141176 0.192157
+map_Kd Black_porcelain0_112.jpg
+map_Bump Black_porcelain1_112.jpg
+newmtl White_porcelaine
+Ka 0 0 0
+Ns 164.022
+Ks 1 1 1
+Kd 0.862745 0.866667 0.905882
+map_Kd White_porcelain0_113.jpg
+map_Bump White_porcelain1_113.jpg
