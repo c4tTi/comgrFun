@@ -1,0 +1,8 @@
+rootProject.name = 'comgrFun'
+
+include ':ether'
+project(':ether').projectDir = new File(settingsDir, '../ether')
+
+include ':ether:ether-core'
+project(':ether:ether-core').projectDir = new File(settingsDir, '../ether/ether-core')
+
