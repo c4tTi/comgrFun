@@ -33,6 +33,7 @@ import java.io.IOException;
 
 import ch.fhnw.comgr.tron.render.CustomMaterial;
 import ch.fhnw.comgr.tron.ui.UI;
+import ch.fhnw.comgr.tron.ui.UIBike;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.platform.Platform;
@@ -70,7 +71,7 @@ public class TronTeam {
     }
 
     public TronTeam(boolean fullscreen) throws IOException {
-        final UI gui = new UI();
+        final UIBike gui = new UIBike();
         final IController controller = new DefaultController() {
             @Override
             public void viewResized(IView view) {
