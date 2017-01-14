@@ -35,9 +35,18 @@ public class BikeTool implements ITool{
 		if(player.isTurningLeft()) player.setRotationAngle(player.getRotationAngle() + TURNING_SPEED);
 		if(player.isTurningRight()) player.setRotationAngle(player.getRotationAngle() - TURNING_SPEED);
 		
+		//Check for distance between teammembers
 		for(Player teamMember : player.getTeam().getPlayers()) {
 			if(player != teamMember && player.calculateDistance(teamMember) < MAX_BIND_DISTANCE) {
 				//TODO: Generate laser thing between players 'player' and 'teamMember'
+			}
+		}
+		
+		//Check for collision between players
+		for(Player otherPlayer : players) {
+			if(player != otherPlayer && player.collidedWithPlayer(otherPlayer)) {
+				player.die();
+				otherPlayer.die();
 			}
 		}
 	}
