@@ -22,6 +22,7 @@ import ch.fhnw.util.math.Vec3;
 public class Player {
 	private static final int CAMERA_DISTANCE = 20;
 	private static final int CAMERA_HEIGHT = 10;
+	private static final float MAX_CURVE_LEAN_ANGLE = 30;
     private final IController controller;
     private final BikeTool bikeTool;
     private final IView view;
@@ -33,6 +34,7 @@ public class Player {
     private List<IMesh> bike;
     private Vec3 position;
     private float rotationAngle;
+    private float curveLeanAngle;
     private boolean isTurningLeft, isTurningRight;
     private int leftKey, rightKey;
 
@@ -70,7 +72,18 @@ public class Player {
         	
             for (IMesh m : bike) {
                 m.setPosition(position);
-                m.setTransform(Mat4.rotate(rotationAngle, Vec3.Z));
+                if(isTurningRight) {
+                	if(curveLeanAngle < MAX_CURVE_LEAN_ANGLE) curveLeanAngle++;
+                }
+                else if(isTurningLeft) {
+                	if(curveLeanAngle > -MAX_CURVE_LEAN_ANGLE) curveLeanAngle--;
+                }
+                else {
+                	if(curveLeanAngle > 0) curveLeanAngle--;
+                	else if(curveLeanAngle < 0) curveLeanAngle++;
+                }
+                m.setTransform(Mat4.multiply(Mat4.rotate(rotationAngle, Vec3.Z), Mat4.rotate(curveLeanAngle, Vec3.X)));
+                
             }
         	
         });

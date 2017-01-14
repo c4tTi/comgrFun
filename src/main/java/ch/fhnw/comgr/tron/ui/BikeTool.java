@@ -90,7 +90,7 @@ public class BikeTool implements ITool{
 
 	@Override
 	public void pointerClicked(IPointerEvent e) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub	
 		
 	}
 
