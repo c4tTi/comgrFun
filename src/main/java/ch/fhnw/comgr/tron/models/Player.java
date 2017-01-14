@@ -21,16 +21,23 @@ public class Player {
     private final IView view;
     private final ICamera cam;
     private final DefaultCameraControl cameraControl;
+
+    private final Team team;
+
     private List<IMesh> bike;
 
-    public Player(IController controller, IView view, ICamera cam) {
+    public Player(IController controller, IView view, ICamera cam, Team team) {
         this.controller = controller;
         this.view = view;
         this.cam = cam;
+        this.team = team;
+
         this.cameraControl = new DefaultCameraControl(cam);
     }
 
     public void enable(Vec3 test) throws IOException {
+        this.team.AddPlayer(this);
+
         bike = LoadBikeModel();
 
         for (IMesh m : bike) {
