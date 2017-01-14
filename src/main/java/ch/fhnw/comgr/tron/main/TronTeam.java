@@ -29,11 +29,13 @@
 
 package ch.fhnw.comgr.tron.main;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Random;
 
 import ch.fhnw.comgr.tron.models.Player;
 import ch.fhnw.comgr.tron.models.Team;
+import ch.fhnw.comgr.tron.ui.BikeTool;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.platform.Platform;
@@ -55,6 +57,7 @@ public class TronTeam {
     private static final int TEAM_SIZES = 2;
     private static final int NR_OF_TEAMS = 2;
     private static final int NR_PLAYERS = NR_OF_TEAMS * TEAM_SIZES;
+    private static final int[] KEYS = {KeyEvent.VK_Q, KeyEvent.VK_W, KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_O, KeyEvent.VK_P, KeyEvent.VK_N, KeyEvent.VK_M}; 
 
     private final Team[] teams;
     private final Player[] players;
@@ -63,7 +66,6 @@ public class TronTeam {
 
     public static void main(String[] args) {
         Platform.get().init();
-
 
         try {
             Thread t = new Thread(() -> {
@@ -90,6 +92,7 @@ public class TronTeam {
 
     public TronTeam() throws IOException {
         final IController controller = new DefaultController();
+        final BikeTool bikeTool = new BikeTool();
 
         teams = new Team[NR_OF_TEAMS];
         players = new Player[NR_PLAYERS];
@@ -97,10 +100,10 @@ public class TronTeam {
         controller.run(time -> {
             IScene scene = new DefaultScene(controller);
             controller.setScene(scene);
+            controller.setTool(bikeTool);
 
-            // Create player instances
             CreateTeams(controller);
-            CreatePlayers(controller);
+            CreatePlayers(controller, bikeTool);
             CreateLights(scene);
         });
     }
@@ -124,7 +127,7 @@ public class TronTeam {
         scene.add3DObject(light);
     }
 
-    private void CreatePlayers(IController controller) {
+    private void CreatePlayers(IController controller, BikeTool bikeTool) {
         IRenderManager renderManager = controller.getRenderManager();
 
         int full_width = Platform.get().getMonitors()[0].getWidth();
@@ -135,7 +138,7 @@ public class TronTeam {
 
         for (int i = 0; i < NR_PLAYERS; i++) {
             try {
-                AddPlayer(renderManager, controller, i, window_width, window_height);
+                AddPlayer(renderManager, controller, i, window_width, window_height, bikeTool, KEYS[2*i], KEYS[2*i+1]);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -143,7 +146,7 @@ public class TronTeam {
     }
 
 
-    private void AddPlayer(IRenderManager renderManager, IController controller, int playerIndex, int window_width, int window_height)
+    private void AddPlayer(IRenderManager renderManager, IController controller, int playerIndex, int window_width, int window_height, BikeTool bikeTool, int leftKey, int rightKey)
             throws IOException {
         int teamOffset   = playerIndex / TEAM_SIZES;
         int playerOffset = playerIndex % TEAM_SIZES;
@@ -156,26 +159,9 @@ public class TronTeam {
         renderManager.getCamera(view);
 
         final ICamera cam = renderManager.getCamera(view);
-
-        Vec3 test;
-        switch (playerIndex)
-        {
-            case 0:
-                test = new Vec3(0.01, 0, 0);
-                break;
-            case 1:
-                test = new Vec3(0, 0.01, 0);
-                break;
-            case 2:
-                test = new Vec3(0.01, 0.01, 0);
-                break;
-            default:
-                test = new Vec3(0.02, 0.02, 0);
-                break;
-        }
-
-        Player player = new Player(controller, view, cam, teams[teamOffset]);
-        player.enable(test);
+        Player player = new Player(controller, view, cam, teams[teamOffset], leftKey, rightKey, bikeTool);
+        bikeTool.addPlayer(player);
+        player.enable();
     }
 
     public RGBA createRandomColor() {
