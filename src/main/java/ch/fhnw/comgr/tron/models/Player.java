@@ -20,6 +20,8 @@ import ch.fhnw.util.math.Vec3;
  * Created by Serquet on 14.01.2017.
  */
 public class Player {
+	private static final int CAMERA_DISTANCE = 20;
+	private static final int CAMERA_HEIGHT = 10;
     private final IController controller;
     private final BikeTool bikeTool;
     private final IView view;
@@ -54,7 +56,9 @@ public class Player {
 
         controller.animate((time, interval) -> {   
         	bikeTool.update(this);
-        	cam.setPosition(position.add(new Vec3(-5, 0, 4)));
+        	float x = (float) (Math.cos(Math.toRadians(rotationAngle)) * CAMERA_DISTANCE);
+        	float y = (float) (Math.sin(Math.toRadians(rotationAngle)) * CAMERA_DISTANCE);
+        	cam.setPosition(position.add(new Vec3(-x, -y, CAMERA_HEIGHT)));
             cam.setTarget(position);
             //System.out.println("Position: " + (int) position.x + "/" + (int) position.y);
         	
