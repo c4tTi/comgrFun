@@ -35,10 +35,14 @@ import java.util.List;
 
 import ch.fhnw.comgr.tron.render.CustomMaterial;
 import ch.fhnw.ether.controller.IController;
+import ch.fhnw.ether.controller.tool.ITool;
 import ch.fhnw.ether.controller.tool.NavigationTool;
 import ch.fhnw.ether.formats.obj.ObjReader;
+import ch.fhnw.ether.render.DefaultRenderManager;
+import ch.fhnw.ether.render.IRenderManager;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
+import ch.fhnw.ether.scene.camera.Camera;
 import ch.fhnw.ether.scene.camera.DefaultCameraControl;
 import ch.fhnw.ether.scene.camera.ICamera;
 import ch.fhnw.ether.scene.light.GenericLight;
@@ -49,6 +53,7 @@ import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
+import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.color.RGB;
 import ch.fhnw.util.math.Mat3;
 import ch.fhnw.util.math.Mat4;
@@ -73,6 +78,13 @@ public class UIBike {
         IScene scene = new DefaultScene(controller);
         controller.setScene(scene);
         
+        ICamera cam = controller.getCamera(controller.getViews().get(0));
+        
+		DefaultCameraControl dcc = new DefaultCameraControl(cam);
+		
+
+        
+        
         final List<IMesh> meshes = new ArrayList<>();
 
         new ObjReader(getClass().getResource("/assets/Bike/Tron.obj")).getMeshes().forEach(meshes::add);
@@ -86,12 +98,17 @@ public class UIBike {
         ILight light = new PointLight(new Vec3(0, -5, 0), RGB.BLACK, RGB.WHITE);
         
         controller.getScene().add3DObject(light);
-        
-        controller.setTool(new NavigationTool(controller));
-        
 
         controller.animate((time, interval) -> {
-            
+        	
+            for (IMesh m : bike) {
+            	Vec3 move = new Vec3(0.01,0,0);
+            	
+                m.setPosition(m.getPosition().add(move));
+                dcc.setPosition(cam.getPosition().add(move));
+                dcc.setTarget(m.getPosition());
+            }
+        	
         });
         
     }

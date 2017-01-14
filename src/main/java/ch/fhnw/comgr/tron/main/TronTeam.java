@@ -61,7 +61,7 @@ public class TronTeam {
             t.setDaemon(true);
             t.start();
 
-            new TronTeam(true);
+            new TronTeam(false);
             
             Platform.get().run();
         } catch (Exception e) {
@@ -81,8 +81,9 @@ public class TronTeam {
         };
 
         controller.run(time -> {
-            final IView view = new DefaultView(controller, 100, 100, 960, 540, new IView.Config(IView.ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "Test");
+            final IView view = new DefaultView(controller, 100, 100, 960, 540, IView.INTERACTIVE_VIEW, "Test");
             controller.setScene(new DefaultScene(controller));
+            controller.viewGainedFocus(view);
             
             try {
                 gui.enable(controller);
