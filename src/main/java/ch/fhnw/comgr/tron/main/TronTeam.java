@@ -32,23 +32,33 @@ package ch.fhnw.comgr.tron.main;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
-import ch.fhnw.comgr.tron.ui.UIBike;
+import ch.fhnw.comgr.tron.models.Player;
+import ch.fhnw.comgr.tron.ui.BikeTool;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
-import ch.fhnw.ether.controller.tool.NavigationTool;
 import ch.fhnw.ether.platform.Platform;
+import ch.fhnw.ether.render.IRenderManager;
 import ch.fhnw.ether.scene.DefaultScene;
-import ch.fhnw.ether.scene.mesh.IMesh;
+import ch.fhnw.ether.scene.IScene;
+import ch.fhnw.ether.scene.camera.ICamera;
+import ch.fhnw.ether.scene.light.ILight;
+import ch.fhnw.ether.scene.light.PointLight;
 import ch.fhnw.ether.view.DefaultView;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.AutoDisposer;
+import ch.fhnw.util.color.RGB;
+import ch.fhnw.util.math.Vec3;
 
 public class TronTeam {
-    
+
+    private static final int TEAM_SIZES = 2;
+    private static final int NR_OF_TEAMS = 2;
+    private static final int NR_PLAYERS = NR_OF_TEAMS * TEAM_SIZES;
+    private static final int[] KEYS = {KeyEvent.VK_Q, KeyEvent.VK_W, KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_O, KeyEvent.VK_P, KeyEvent.VK_N, KeyEvent.VK_M}; 
+
     public static void main(String[] args) {
         Platform.get().init();
 
-        
         try {
             Thread t = new Thread(() -> {
                 try {
@@ -57,45 +67,76 @@ public class TronTeam {
                         //System.out.println("run gc");
                         AutoDisposer.runGC();
                     }
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
             }, "gc forcer");
             t.setDaemon(true);
             t.start();
 
-            new TronTeam(false);
-            
+            new TronTeam();
+
             Platform.get().run();
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
-        }    
+        }
     }
 
-    public TronTeam(boolean fullscreen) throws IOException {
-        final UIBike gui = new UIBike(KeyEvent.VK_A, KeyEvent.VK_D);
-        
-        final IController controller = new DefaultController() {
-            @Override
-            public void viewResized(IView view) {
-                gui.viewResized(view.getViewport().w, view.getViewport().h);
-                super.viewResized(view);
-            }
-        };
+    public TronTeam() throws IOException {
+        final IController controller = new DefaultController();
+        final BikeTool bikeTool = new BikeTool();
 
         controller.run(time -> {
-            final IView view = new DefaultView(controller, 100, 100, 960, 540, IView.INTERACTIVE_VIEW, "Test");
-            controller.setScene(new DefaultScene(controller));
-            controller.viewGainedFocus(view);
+            IScene scene = new DefaultScene(controller);
+            controller.setScene(scene);
+            controller.setTool(bikeTool);
             
+            // Create player instances
+            CreatePlayers(controller, bikeTool);
+            CreateLights(scene);
+        });
+    }
+
+    private void CreateLights(IScene scene) {
+        ILight light = new PointLight(new Vec3(0, -5, 0), RGB.BLACK, RGB.WHITE);
+        scene.add3DObject(light);
+    }
+
+    private void CreatePlayers(IController controller, BikeTool bikeTool) {
+        IRenderManager renderManager = controller.getRenderManager();
+
+        int full_width = Platform.get().getMonitors()[0].getWidth();
+        int full_height = Platform.get().getMonitors()[0].getHeight();
+
+        int window_width = full_width / NR_OF_TEAMS;
+        int window_height = full_height / TEAM_SIZES;
+
+        for (int i = 0; i < NR_PLAYERS; i++) {
             try {
-                gui.enable(controller);
+                AddPlayer(renderManager, controller, i, window_width, window_height, bikeTool, KEYS[2*i], KEYS[2*i+1]);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
 
-            if (fullscreen) {
-                Platform.get().runOnMainThread(() -> view.getWindow().setFullscreen(Platform.get().getMonitors()[0]));
-            }
-        });
+
+    private void AddPlayer(IRenderManager renderManager, IController controller, int playerIndex, int window_width, int window_height, BikeTool bikeTool, int leftKey, int rightKey)
+            throws IOException {
+        int teamOffset   = playerIndex / TEAM_SIZES;
+        int playerOffset = playerIndex % TEAM_SIZES;
+
+        final IView view = new DefaultView(controller,
+                teamOffset*window_width,
+                playerOffset*window_height,
+                window_width, window_height,
+                IView.RENDER_VIEW, "Player " + playerIndex);
+        renderManager.getCamera(view);
+
+        final ICamera cam = renderManager.getCamera(view);
+
+        Player player = new Player(controller, view, cam, leftKey, rightKey, bikeTool);
+        bikeTool.addPlayer(player);
+        player.enable();
     }
 }

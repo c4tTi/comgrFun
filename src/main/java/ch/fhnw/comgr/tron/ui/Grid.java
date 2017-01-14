@@ -18,7 +18,7 @@ public class Grid {
 	public static IMesh makeGrid() {
 		List<Vec3> lines = new ArrayList<>();
 
-		int gridNumLines = 120;
+		int gridNumLines = 1200;
 		float gridSpacing = 1f;
 
 		// add axis lines
