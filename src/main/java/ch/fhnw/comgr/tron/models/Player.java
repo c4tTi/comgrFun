@@ -18,7 +18,7 @@ import ch.fhnw.util.math.Vec2;
 import ch.fhnw.util.math.Vec3;
 
 /**
- * Created by Serquet on 14.01.2017.
+ * Created by Serquet.
  */
 public class Player {
 	private static final float BIKE_WIDTH = 3.2f;
@@ -34,7 +34,7 @@ public class Player {
 
     private final Team team;
 
-    private List<IMesh> bike;
+    private IMesh bike;
     private Vec3 position;
     private float rotationAngle;
     private float curveLeanAngle;
@@ -63,10 +63,8 @@ public class Player {
         bike = LoadBikeModel();
         IMesh grid = Grid.makeGrid();
 
-        for (IMesh m : bike) {
-            controller.getScene().add3DObject(m);
-            controller.getScene().add3DObject(grid);
-        }
+        controller.getScene().add3DObject(bike);
+        controller.getScene().add3DObject(grid);
 
         controller.animate((time, interval) -> {   
         	if(dead) {
@@ -80,8 +78,7 @@ public class Player {
 	            cam.setTarget(position);
 	            //System.out.println("Position: " + (int) position.x + "/" + (int) position.y);
 	        	
-	            for (IMesh m : bike) {
-	                m.setPosition(position);
+	                bike.setPosition(position);
 	                if(isTurningRight) {
 	                	if(curveLeanAngle < MAX_CURVE_LEAN_ANGLE) curveLeanAngle++;
 	                }
@@ -92,17 +89,16 @@ public class Player {
 	                	if(curveLeanAngle > 0) curveLeanAngle--;
 	                	else if(curveLeanAngle < 0) curveLeanAngle++;
 	                }
-	                m.setTransform(Mat4.multiply(Mat4.rotate(rotationAngle, Vec3.Z), Mat4.rotate(curveLeanAngle, Vec3.X)));
-	            }
+	                bike.setTransform(Mat4.multiply(Mat4.rotate(rotationAngle, Vec3.Z), Mat4.rotate(curveLeanAngle, Vec3.X)));
         	}
         });
 
     }
 
-    private List<IMesh> LoadBikeModel() throws IOException {
+    private IMesh LoadBikeModel() throws IOException {
         final List<IMesh> meshes = new ArrayList<>();
         new ObjReader(getClass().getResource("/assets/Bike/Tron.obj")).getMeshes().forEach(meshes::add);
-        return MeshUtilities.mergeMeshes(meshes);
+        return MeshUtilities.mergeMeshes(meshes).get(0);
     }
     
 	/**
