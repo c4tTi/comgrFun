@@ -162,6 +162,8 @@ public class TronTeam {
 
         final ICamera cam = renderManager.getCamera(view);
         Player player = new Player(controller, view, cam, teams[teamOffset], leftKey, rightKey, bikeTool);
+        players[playerIndex] = player;
+        teams[teamOffset].AddPlayer(player);
         player.enable();
     }
 
