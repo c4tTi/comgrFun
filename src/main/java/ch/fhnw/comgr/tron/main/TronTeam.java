@@ -35,6 +35,7 @@ import java.io.IOException;
 import ch.fhnw.comgr.tron.models.Player;
 import ch.fhnw.comgr.tron.models.Team;
 import ch.fhnw.comgr.tron.ui.BikeTool;
+import ch.fhnw.comgr.tron.ui.Grid;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.platform.Platform;
@@ -44,6 +45,7 @@ import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.ICamera;
 import ch.fhnw.ether.scene.light.ILight;
 import ch.fhnw.ether.scene.light.PointLight;
+import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.view.DefaultView;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.AutoDisposer;
@@ -103,13 +105,17 @@ public class TronTeam {
             controller.setScene(scene);
             controller.setTool(bikeTool);
 
+
+            IMesh grid = Grid.makeGrid();
+            controller.getScene().add3DObject(grid);
+
             CreatePlayers(controller, bikeTool);
             CreateLights(scene);
         });
     }
 
     private void CreateLights(IScene scene) {
-        ILight light = new PointLight(new Vec3(0, -5, 0), RGB.BLACK, RGB.WHITE);
+        ILight light = new PointLight(new Vec3(0, -5, 10), RGB.BLACK, RGB.WHITE);
         scene.add3DObject(light);
     }
 

@@ -61,10 +61,7 @@ public class Player {
 
     public void enable() throws IOException {
         bike = LoadBikeModel();
-        IMesh grid = Grid.makeGrid();
-
         controller.getScene().add3DObject(bike);
-        controller.getScene().add3DObject(grid);
 
         controller.animate((time, interval) -> {   
         	if(dead) {
