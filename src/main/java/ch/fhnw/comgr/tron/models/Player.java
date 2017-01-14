@@ -32,14 +32,16 @@ public class Player {
     private float rotationAngle;
     private boolean isTurningLeft, isTurningRight;
     private int leftKey, rightKey;
+    private int team;
 
-    public Player(IController controller, IView view, ICamera cam, int leftKey, int rightKey, BikeTool bikeTool) {
+    public Player(IController controller, IView view, ICamera cam, int leftKey, int rightKey, int team, BikeTool bikeTool) {
         this.controller = controller;
         this.view = view;
         this.cam = cam;
         this.cameraControl = new DefaultCameraControl(cam);
         this.leftKey = leftKey;
         this.rightKey = rightKey;
+        this.team = team;
         this.bikeTool = bikeTool;
         position = new Vec3(0,0,0);
     	rotationAngle = 0;
@@ -77,6 +79,14 @@ public class Player {
         return MeshUtilities.mergeMeshes(meshes);
     }
     
+	/**
+	 * Calculates and returns the distance between this and player p.
+	 */
+	public float calculateDistance(Player p) {
+		return (float) Math.sqrt(((position.x - p.getPosition().x) * (position.x - p.getPosition().x))
+				+ ((position.y - p.getPosition().y) * (position.y - p.getPosition().y)));
+	}
+    
     
     public void setPosition(Vec3 newPosition) { position = newPosition; }
     public Vec3 getPosition() { return position; }
@@ -92,4 +102,6 @@ public class Player {
     
     public int getLeftKey() { return leftKey; }
     public int getRightKey() { return rightKey; }
+    
+    public int getTeam() { return team; }
 }

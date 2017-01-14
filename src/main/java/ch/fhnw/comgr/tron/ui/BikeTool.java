@@ -13,26 +13,38 @@ public class BikeTool implements ITool{
 	
 	private static final float TURNING_SPEED = 2f;
 	private static final float SPEED = 0.2f;
+	private static final float MAX_BIND_DISTANCE = 20f;
 	ArrayList<Player> players;
+	ArrayList<ArrayList<Player>> teams;
 	
-	public BikeTool() {
+	public BikeTool(int amountOfTeams) {
 		players = new ArrayList<Player>();
+		teams = new ArrayList<ArrayList<Player>>();
+		for(int i = 0; i < amountOfTeams; i++) {
+			teams.add(new ArrayList<Player>());
+		}
 	}
 	
-	public void addPlayer(Player p) {
+	public void addPlayer(Player p, int teamIndex) {
 		players.add(p);
+		teams.get(teamIndex).add(p);
 	}
 	
+	/**
+	 * Updates position, rotation and wall bindings of given player.
+	 */
 	public void update(Player player) {
-		for(Player p : players) {
-			if(p == player) {
-				float x, y;
-				x = (float) (Math.cos(Math.toRadians(p.getRotationAngle())) * SPEED);
-				y = (float) (Math.sin(Math.toRadians(p.getRotationAngle())) * SPEED);
-				p.setPosition(p.getPosition().add(new Vec3(x, y, 0)));
-				
-				if(p.isTurningLeft()) p.setRotationAngle(p.getRotationAngle() + TURNING_SPEED);
-				if(p.isTurningRight()) p.setRotationAngle(p.getRotationAngle() - TURNING_SPEED);
+		float x, y;
+		x = (float) (Math.cos(Math.toRadians(player.getRotationAngle())) * SPEED);
+		y = (float) (Math.sin(Math.toRadians(player.getRotationAngle())) * SPEED);
+		player.setPosition(player.getPosition().add(new Vec3(x, y, 0)));
+		
+		if(player.isTurningLeft()) player.setRotationAngle(player.getRotationAngle() + TURNING_SPEED);
+		if(player.isTurningRight()) player.setRotationAngle(player.getRotationAngle() - TURNING_SPEED);
+		
+		for(Player teamMember : teams.get(player.getTeam())) {
+			if(player != teamMember && player.calculateDistance(teamMember) < MAX_BIND_DISTANCE) {
+				//TODO: Generate laser thing between players 'player' and 'teamMember'
 			}
 		}
 	}

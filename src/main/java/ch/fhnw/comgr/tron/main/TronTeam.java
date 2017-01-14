@@ -84,7 +84,7 @@ public class TronTeam {
 
     public TronTeam() throws IOException {
         final IController controller = new DefaultController();
-        final BikeTool bikeTool = new BikeTool();
+        final BikeTool bikeTool = new BikeTool(NR_OF_TEAMS);
 
         controller.run(time -> {
             IScene scene = new DefaultScene(controller);
@@ -135,8 +135,8 @@ public class TronTeam {
 
         final ICamera cam = renderManager.getCamera(view);
 
-        Player player = new Player(controller, view, cam, leftKey, rightKey, bikeTool);
-        bikeTool.addPlayer(player);
+        Player player = new Player(controller, view, cam, leftKey, rightKey, teamOffset, bikeTool);
+        bikeTool.addPlayer(player, teamOffset);
         player.enable();
     }
 }
