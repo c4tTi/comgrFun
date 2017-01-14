@@ -14,6 +14,7 @@ import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.math.Mat4;
+import ch.fhnw.util.math.Vec2;
 import ch.fhnw.util.math.Vec3;
 
 /**
@@ -51,7 +52,6 @@ public class Player {
     }
 
     public void enable() throws IOException {
-        this.team.AddPlayer(this);
         bike = LoadBikeModel();
         IMesh grid = Grid.makeGrid();
 
@@ -90,6 +90,10 @@ public class Player {
 		return (float) Math.sqrt(((position.x - p.getPosition().x) * (position.x - p.getPosition().x))
 				+ ((position.y - p.getPosition().y) * (position.y - p.getPosition().y)));
 	}
+
+    public Vec3 getPointBetween(Player p) {
+        return Vec3.lerp(position, p.position, 0.5f);
+    }
     
     
     public void setPosition(Vec3 newPosition) { position = newPosition; }

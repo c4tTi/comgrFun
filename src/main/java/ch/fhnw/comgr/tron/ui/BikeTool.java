@@ -14,7 +14,6 @@ public class BikeTool implements ITool{
 	
 	private static final float TURNING_SPEED = 2f;
 	private static final float SPEED = 0.2f;
-	private static final float MAX_BIND_DISTANCE = 20f;
 	Player[] players;
 	Team[] teams;
 	
@@ -34,12 +33,6 @@ public class BikeTool implements ITool{
 		
 		if(player.isTurningLeft()) player.setRotationAngle(player.getRotationAngle() + TURNING_SPEED);
 		if(player.isTurningRight()) player.setRotationAngle(player.getRotationAngle() - TURNING_SPEED);
-		
-		for(Player teamMember : player.getTeam().getPlayers()) {
-			if(player != teamMember && player.calculateDistance(teamMember) < MAX_BIND_DISTANCE) {
-				//TODO: Generate laser thing between players 'player' and 'teamMember'
-			}
-		}
 	}
 	
 	@Override

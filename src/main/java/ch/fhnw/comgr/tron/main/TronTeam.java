@@ -31,7 +31,6 @@ package ch.fhnw.comgr.tron.main;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.Random;
 
 import ch.fhnw.comgr.tron.models.Player;
 import ch.fhnw.comgr.tron.models.Team;
@@ -57,12 +56,12 @@ public class TronTeam {
     private static final int TEAM_SIZES = 2;
     private static final int NR_OF_TEAMS = 2;
     private static final int NR_PLAYERS = NR_OF_TEAMS * TEAM_SIZES;
-    private static final int[] KEYS = {KeyEvent.VK_Q, KeyEvent.VK_W, KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_O, KeyEvent.VK_P, KeyEvent.VK_N, KeyEvent.VK_M}; 
+    private static final int[] KEYS = {KeyEvent.VK_Q, KeyEvent.VK_W, KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_O, KeyEvent.VK_P, KeyEvent.VK_N, KeyEvent.VK_M};
+    private static final RGBA[] teamColors = new RGBA[]{ RGBA.GREEN, RGBA.BLUE, RGBA.RED, RGBA.CYAN};
 
     private final Team[] teams;
     private final Player[] players;
-    
-    private final RGBA[] teamColors = new RGBA[]{ RGBA.GREEN, RGBA.BLUE, RGBA.RED, RGBA.CYAN};
+
 
     public static void main(String[] args) {
         Platform.get().init();
@@ -104,24 +103,9 @@ public class TronTeam {
             controller.setScene(scene);
             controller.setTool(bikeTool);
 
-            CreateTeams(controller);
             CreatePlayers(controller, bikeTool);
             CreateLights(scene);
         });
-    }
-
-    private void CreateTeams(IController controller) {
-        for (int i  = 0; i < NR_OF_TEAMS; i++)
-        {
-            if (i < teamColors.length)
-            {
-                teams[i] = new Team(teamColors[i]);
-            }
-            else
-            {
-                teams[i] = new Team(createRandomColor());
-            }
-        }
     }
 
     private void CreateLights(IScene scene) {
@@ -138,12 +122,22 @@ public class TronTeam {
         int window_width = full_width / NR_OF_TEAMS;
         int window_height = full_height / TEAM_SIZES;
 
+        for (int i  = 0; i < NR_OF_TEAMS; i++)
+        {
+            teams[i] = new Team(controller, teamColors[i]);
+        }
+
         for (int i = 0; i < NR_PLAYERS; i++) {
             try {
                 AddPlayer(renderManager, controller, i, window_width, window_height, bikeTool, KEYS[2*i], KEYS[2*i+1]);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        for (int i  = 0; i < NR_OF_TEAMS; i++)
+        {
+            teams[i].enable();
         }
     }
 
@@ -165,10 +159,5 @@ public class TronTeam {
         players[playerIndex] = player;
         teams[teamOffset].AddPlayer(player);
         player.enable();
-    }
-
-    public RGBA createRandomColor() {
-        Random rand = new Random();
-        return new RGBA(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1);
     }
 }
