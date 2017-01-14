@@ -33,6 +33,14 @@ public class BikeTool implements ITool{
 		
 		if(player.isTurningLeft()) player.setRotationAngle(player.getRotationAngle() + TURNING_SPEED);
 		if(player.isTurningRight()) player.setRotationAngle(player.getRotationAngle() - TURNING_SPEED);
+		
+		//Check for collision between players
+		for(Player otherPlayer : players) {
+			if(player != otherPlayer && player.collidedWithPlayer(otherPlayer)) {
+				player.die();
+				otherPlayer.die();
+			}
+		}
 	}
 	
 	@Override
@@ -83,7 +91,7 @@ public class BikeTool implements ITool{
 
 	@Override
 	public void pointerClicked(IPointerEvent e) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub	
 		
 	}
 
