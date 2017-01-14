@@ -29,39 +29,40 @@
 
 package ch.fhnw.comgr.tron.ui;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.fhnw.comgr.tron.render.CustomMaterial;
 import ch.fhnw.ether.controller.IController;
-import ch.fhnw.ether.controller.tool.ITool;
 import ch.fhnw.ether.controller.tool.NavigationTool;
 import ch.fhnw.ether.formats.obj.ObjReader;
-import ch.fhnw.ether.render.DefaultRenderManager;
-import ch.fhnw.ether.render.IRenderManager;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
-import ch.fhnw.ether.scene.camera.Camera;
 import ch.fhnw.ether.scene.camera.DefaultCameraControl;
 import ch.fhnw.ether.scene.camera.ICamera;
-import ch.fhnw.ether.scene.light.GenericLight;
 import ch.fhnw.ether.scene.light.ILight;
 import ch.fhnw.ether.scene.light.PointLight;
-import ch.fhnw.ether.scene.light.SpotLight;
 import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
-import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.color.RGB;
-import ch.fhnw.util.math.Mat3;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 
-public class UIBike {
+public class UIBike{
     private IController controller;
     private IMesh mesh;
+    private BikeTool bikeTool;
+    private Vec3 position;
+    private float rotationAngle;
+    
+    public UIBike(int leftKey, int rightKey) {
+    	bikeTool = new BikeTool(leftKey, rightKey);
+    }
 
     private static IMesh makeColoredTriangle() {
         float[] vertices = { 0, 0.5f, 0, 0.5f, 0, 0.5f, 0, 0, 0.5f };
@@ -70,10 +71,12 @@ public class UIBike {
         DefaultGeometry g = DefaultGeometry.createVC(vertices, colors);
         return new DefaultMesh(IMesh.Primitive.TRIANGLES, new CustomMaterial(2f), g);
     }
-
-
+    
     public void enable(IController controller) throws IOException {
+    	position = new Vec3(0,0,0);
+    	rotationAngle = 0;
         this.controller = controller;
+        controller.setTool(bikeTool);
 
         IScene scene = new DefaultScene(controller);
         controller.setScene(scene);
@@ -89,27 +92,37 @@ public class UIBike {
 
         new ObjReader(getClass().getResource("/assets/Bike/Tron.obj")).getMeshes().forEach(meshes::add);
         
+        IMesh grid = Grid.makeGrid();
         final List<IMesh> bike = MeshUtilities.mergeMeshes(meshes);
         
         for (IMesh m : bike) {
             controller.getScene().add3DObject(m);
+            controller.getScene().add3DObject(grid);
         }
         
         ILight light = new PointLight(new Vec3(0, -5, 0), RGB.BLACK, RGB.WHITE);
         
         controller.getScene().add3DObject(light);
+      
 
         controller.animate((time, interval) -> {
+        	bikeTool.update(position, rotationAngle);
+        	position = bikeTool.getPosition();
+        	rotationAngle = bikeTool.getRotationAngle();
+        	
+        	
+        	dcc.setPosition(position.add(new Vec3(-5, 0, 4)));
+            dcc.setTarget(position);
+            //System.out.println("Position: " + (int) position.x + "/" + (int) position.y);
         	
             for (IMesh m : bike) {
-            	Vec3 move = new Vec3(0.01,0,0);
-            	
-                m.setPosition(m.getPosition().add(move));
-                dcc.setPosition(cam.getPosition().add(move));
-                dcc.setTarget(m.getPosition());
+                m.setPosition(position);
+                m.setTransform(Mat4.rotate(bikeTool.getRotationAngle(), Vec3.Z));
             }
         	
         });
+        
+        
         
     }
 

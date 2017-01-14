@@ -29,15 +29,16 @@
 
 package ch.fhnw.comgr.tron.main;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
-import ch.fhnw.comgr.tron.render.CustomMaterial;
-import ch.fhnw.comgr.tron.ui.UI;
 import ch.fhnw.comgr.tron.ui.UIBike;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
+import ch.fhnw.ether.controller.tool.NavigationTool;
 import ch.fhnw.ether.platform.Platform;
 import ch.fhnw.ether.scene.DefaultScene;
+import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.view.DefaultView;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.AutoDisposer;
@@ -71,7 +72,8 @@ public class TronTeam {
     }
 
     public TronTeam(boolean fullscreen) throws IOException {
-        final UIBike gui = new UIBike();
+        final UIBike gui = new UIBike(KeyEvent.VK_A, KeyEvent.VK_D);
+        
         final IController controller = new DefaultController() {
             @Override
             public void viewResized(IView view) {
