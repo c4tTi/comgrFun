@@ -31,8 +31,8 @@ public class BikeTool implements ITool{
 				y = (float) (Math.sin(Math.toRadians(p.getRotationAngle())) * SPEED);
 				p.setPosition(p.getPosition().add(new Vec3(x, y, 0)));
 				
-				if(p.isTurningLeft()) p.setRotationAngle(p.getRotationAngle() - TURNING_SPEED);
-				if(p.isTurningRight()) p.setRotationAngle(p.getRotationAngle() + TURNING_SPEED);
+				if(p.isTurningLeft()) p.setRotationAngle(p.getRotationAngle() + TURNING_SPEED);
+				if(p.isTurningRight()) p.setRotationAngle(p.getRotationAngle() - TURNING_SPEED);
 			}
 		}
 	}
