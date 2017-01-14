@@ -27,27 +27,31 @@ public class Player {
     private final IView view;
     private final ICamera cam;
     private final DefaultCameraControl cameraControl;
+
+    private final Team team;
+
     private List<IMesh> bike;
     private Vec3 position;
     private float rotationAngle;
     private boolean isTurningLeft, isTurningRight;
     private int leftKey, rightKey;
-    private int team;
 
-    public Player(IController controller, IView view, ICamera cam, int leftKey, int rightKey, int team, BikeTool bikeTool) {
+    public Player(IController controller, IView view, ICamera cam, Team team, int leftKey, int rightKey, BikeTool bikeTool) {
         this.controller = controller;
         this.view = view;
         this.cam = cam;
+        this.team = team;
+
         this.cameraControl = new DefaultCameraControl(cam);
         this.leftKey = leftKey;
         this.rightKey = rightKey;
-        this.team = team;
         this.bikeTool = bikeTool;
         position = new Vec3(0,0,0);
     	rotationAngle = 0;
     }
 
     public void enable() throws IOException {
+        this.team.AddPlayer(this);
         bike = LoadBikeModel();
         IMesh grid = Grid.makeGrid();
 
@@ -103,5 +107,5 @@ public class Player {
     public int getLeftKey() { return leftKey; }
     public int getRightKey() { return rightKey; }
     
-    public int getTeam() { return team; }
+    public Team getTeam() { return team; }
 }

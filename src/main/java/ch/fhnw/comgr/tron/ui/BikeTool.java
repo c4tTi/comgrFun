@@ -3,6 +3,7 @@ package ch.fhnw.comgr.tron.ui;
 import java.util.ArrayList;
 
 import ch.fhnw.comgr.tron.models.Player;
+import ch.fhnw.comgr.tron.models.Team;
 import ch.fhnw.ether.controller.event.IKeyEvent;
 import ch.fhnw.ether.controller.event.IPointerEvent;
 import ch.fhnw.ether.controller.tool.ITool;
@@ -14,20 +15,12 @@ public class BikeTool implements ITool{
 	private static final float TURNING_SPEED = 2f;
 	private static final float SPEED = 0.2f;
 	private static final float MAX_BIND_DISTANCE = 20f;
-	ArrayList<Player> players;
-	ArrayList<ArrayList<Player>> teams;
+	Player[] players;
+	Team[] teams;
 	
-	public BikeTool(int amountOfTeams) {
-		players = new ArrayList<Player>();
-		teams = new ArrayList<ArrayList<Player>>();
-		for(int i = 0; i < amountOfTeams; i++) {
-			teams.add(new ArrayList<Player>());
-		}
-	}
-	
-	public void addPlayer(Player p, int teamIndex) {
-		players.add(p);
-		teams.get(teamIndex).add(p);
+	public BikeTool(Player[] players, Team[] teams) {
+		this.players = players;
+		this.teams = teams;
 	}
 	
 	/**
@@ -42,7 +35,7 @@ public class BikeTool implements ITool{
 		if(player.isTurningLeft()) player.setRotationAngle(player.getRotationAngle() + TURNING_SPEED);
 		if(player.isTurningRight()) player.setRotationAngle(player.getRotationAngle() - TURNING_SPEED);
 		
-		for(Player teamMember : teams.get(player.getTeam())) {
+		for(Player teamMember : player.getTeam().getPlayers()) {
 			if(player != teamMember && player.calculateDistance(teamMember) < MAX_BIND_DISTANCE) {
 				//TODO: Generate laser thing between players 'player' and 'teamMember'
 			}

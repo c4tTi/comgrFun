@@ -31,8 +31,10 @@ package ch.fhnw.comgr.tron.main;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.Random;
 
 import ch.fhnw.comgr.tron.models.Player;
+import ch.fhnw.comgr.tron.models.Team;
 import ch.fhnw.comgr.tron.ui.BikeTool;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
@@ -47,6 +49,7 @@ import ch.fhnw.ether.view.DefaultView;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.AutoDisposer;
 import ch.fhnw.util.color.RGB;
+import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Vec3;
 
 public class TronTeam {
@@ -55,6 +58,11 @@ public class TronTeam {
     private static final int NR_OF_TEAMS = 2;
     private static final int NR_PLAYERS = NR_OF_TEAMS * TEAM_SIZES;
     private static final int[] KEYS = {KeyEvent.VK_Q, KeyEvent.VK_W, KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_O, KeyEvent.VK_P, KeyEvent.VK_N, KeyEvent.VK_M}; 
+
+    private final Team[] teams;
+    private final Player[] players;
+    
+    private final RGBA[] teamColors = new RGBA[]{ RGBA.GREEN, RGBA.BLUE, RGBA.RED, RGBA.CYAN};
 
     public static void main(String[] args) {
         Platform.get().init();
@@ -84,17 +92,36 @@ public class TronTeam {
 
     public TronTeam() throws IOException {
         final IController controller = new DefaultController();
-        final BikeTool bikeTool = new BikeTool(NR_OF_TEAMS);
+       
+
+        teams = new Team[NR_OF_TEAMS];
+        players = new Player[NR_PLAYERS];
+        
+        final BikeTool bikeTool = new BikeTool(players, teams);
 
         controller.run(time -> {
             IScene scene = new DefaultScene(controller);
             controller.setScene(scene);
             controller.setTool(bikeTool);
-            
-            // Create player instances
+
+            CreateTeams(controller);
             CreatePlayers(controller, bikeTool);
             CreateLights(scene);
         });
+    }
+
+    private void CreateTeams(IController controller) {
+        for (int i  = 0; i < NR_OF_TEAMS; i++)
+        {
+            if (i < teamColors.length)
+            {
+                teams[i] = new Team(teamColors[i]);
+            }
+            else
+            {
+                teams[i] = new Team(createRandomColor());
+            }
+        }
     }
 
     private void CreateLights(IScene scene) {
@@ -134,9 +161,12 @@ public class TronTeam {
         renderManager.getCamera(view);
 
         final ICamera cam = renderManager.getCamera(view);
-
-        Player player = new Player(controller, view, cam, leftKey, rightKey, teamOffset, bikeTool);
-        bikeTool.addPlayer(player, teamOffset);
+        Player player = new Player(controller, view, cam, teams[teamOffset], leftKey, rightKey, bikeTool);
         player.enable();
+    }
+
+    public RGBA createRandomColor() {
+        Random rand = new Random();
+        return new RGBA(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1);
     }
 }
