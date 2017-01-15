@@ -10,6 +10,7 @@ import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
 import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
 import ch.fhnw.ether.scene.mesh.material.ColorMaterial;
 import ch.fhnw.ether.scene.mesh.material.IMaterial;
+import ch.fhnw.util.ArrayUtilities;
 import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Vec3;
 
@@ -25,28 +26,45 @@ public class Wall {
     private static final float WALL_HEIGHT = 1.5f;
     private static final float WALL_THICKNESS = 0.1f;
 
-    private static final int MERGED_WALL_PART_SIZE = 15;
-    private static final int WALL_SEGMENT_SIZE = MERGED_WALL_PART_SIZE * 20;
+    private static final int MAX_SMALL_SEGMENTS = 15;
+    private static final int MAX_COLLISION_SEGMENT_SIZE = MAX_SMALL_SEGMENTS * 20;
+    private static final Vec3 TOP_VEC = new Vec3(0f, 0f, 1f);
 
     private final IController controller;
     private final Team team;
     private final Player playerA;
     private final Player playerB;
 
-    private IMaterial material;
-    private float texOff = 0;
-    private float tmpTexOff = 0;
-    private float[] colors;
+    private IMaterial sideMaterial;
+    private IMaterial topMaterial;
+    private float[] sideColors;
+    private float[] topColors;
 
-    private boolean isWallBuilding = false;
-    private Vec3 previousEdge;
-    private Vec3 tmpSegmentStart;
-    private List<IMesh> tmpSegmentMeshes = new ArrayList<>();
-    private List<IMesh> currentSegmentMeshes = new ArrayList<>();
-    private int wallPartCounter = 0;
+    /**
+     * List of temporary meshes that represent the nearest wall part.
+     * They will be removed and merged to a single wall after a time.
+     *
+     * If the wall is curved, it will be straightened a little
+     */
+    private List<IMesh> smallSegmentMeshes = new ArrayList<>();
+    private float lSmallTexOff = 0;
+    private float rSmallTexOff = 0;
+    private WallCorner smallSegmentStart;
+    private int smallSegmentCounter = 0;
 
-    private List<WallSegment> segments = new ArrayList<>();
-    private WallSegment currentSegment;
+    /**
+     * List of the final meshes of the wall. They are sometimes merged for performance, but the form of the wall remain.
+     */
+    private List<IMesh> bigSegmentMeshes = new ArrayList<>();
+    private float lBigTexOff = 0;
+    private float rBigTexOff = 0;
+    private WallCorner bigSegmentStart;
+
+    /**
+     * Used for collision detection
+     */
+    private List<WallSegment> collisionSegments = new ArrayList<>();
+    private WallSegment currentCollisionSegment;
 
 
     public Wall(IController controller, Team team, Player playerA, Player playerB) {
@@ -67,7 +85,7 @@ public class Wall {
         controller.animate((time, interval) -> {
             // TODO: use squared distance maybe
             if (playerA.calculateDistance(playerB) < MAX_BIND_DISTANCE) {
-                addWallSegment(playerA.getPointBetween(playerB));
+                addWallEdge(playerA.getPointBetween(playerB));
             } else {
                 stopWallBuilding();
             }
@@ -75,7 +93,7 @@ public class Wall {
     }
 
     public boolean checkCollision(Player p) {
-        for (WallSegment s : segments) {
+        for (WallSegment s : collisionSegments) {
             if (s.checkCollision(p)) {
                 return true;
             }
@@ -91,8 +109,8 @@ public class Wall {
             e.printStackTrace();
         }
 
-        material = new ColorMapMaterial(team.getTeamColor(), t, true);
-        //material = new ColorMaterial(team.getTeamColor());
+        sideMaterial = new ColorMapMaterial(team.getTeamColor(), t, true);
+        topMaterial  = new ColorMaterial(team.getTeamColor());
     }
 
     private void createColors() {
@@ -101,148 +119,237 @@ public class Wall {
         float g = Math.max(0.0f, teamColor.g - 0.2f);
         float b = Math.max(0.0f, teamColor.b - 0.2f);
 
-        final int nrVertices = 18;
-        colors = new float[4 * nrVertices];
-        for (int i = 0; i < nrVertices; i++) {
-            colors[4 * i] = r;
-            colors[4 * i + 1] = g;
-            colors[4 * i + 2] = b;
-            colors[4 * i + 3] = 1;
+        sideColors = new float[4 * 12];
+        for (int i = 0; i < sideColors.length/4; i++) {
+            sideColors[4 * i + 0] = r;
+            sideColors[4 * i + 1] = g;
+            sideColors[4 * i + 2] = b;
+            sideColors[4 * i + 3] = 1f;
+        }
+
+        topColors = new float[4 * 6];
+        for (int i = 0; i < topColors.length/4; i++) {
+            topColors[4 * i + 0] = 1;
+            topColors[4 * i + 1] = 1;
+            topColors[4 * i + 2] = 1;
+            topColors[4 * i + 3] = 1f;
         }
     }
 
-    private void addWallSegment(Vec3 newEdge) {
-        if (isWallBuilding) {
-            addSegment(previousEdge, newEdge);
+    private void addWallEdge(Vec3 newEdge) {
+        WallCorner segmentEnd = new WallCorner(newEdge);
+
+        if (smallSegmentStart != null) {
+            addSmallSegment(segmentEnd);
         } else {
-            tmpSegmentStart = newEdge;
+            bigSegmentStart = segmentEnd;
         }
 
-        previousEdge = newEdge;
-        isWallBuilding = true;
+        smallSegmentStart = segmentEnd;
     }
 
     private void stopWallBuilding() {
-        isWallBuilding = false;
-        currentSegment = null;
-
-        mergeTmpSegments(previousEdge);
-        mergeMeshes();
-    }
-
-    private void addSegment(Vec3 start, Vec3 end) {
-        wallPartCounter++;
-
-        if (wallPartCounter % MERGED_WALL_PART_SIZE == 0) {
-            mergeTmpSegments(end);
-            if (currentSegment == null) {
-                currentSegment = new WallSegment(tmpSegmentStart, end);
-                segments.add(currentSegment);
-            } else {
-                currentSegment.addEdge(end);
-            }
-        } else {
-            IMesh mesh = makeWallSegment(start.x, start.y, end.x, end.y);
-            controller.getScene().add3DObject(mesh);
-            tmpSegmentMeshes.add(mesh);
-            tmpTexOff = texOff;
+        if (smallSegmentStart != null) {
+            mergeSmallSegments(smallSegmentStart, true);
+            mergeMeshes();
         }
 
-        if (wallPartCounter % WALL_SEGMENT_SIZE == 0) {
+        smallSegmentStart = null;
+        currentCollisionSegment = null;
+    }
+
+    private void addSmallSegment(WallCorner segmentEnd) {
+        smallSegmentCounter++;
+
+        if (smallSegmentCounter % MAX_SMALL_SEGMENTS == 0) {
+            mergeSmallSegments(segmentEnd);
+
+            // refresh current collision-entity
+            if (currentCollisionSegment == null) {
+                currentCollisionSegment = new WallSegment(bigSegmentStart.mid, segmentEnd.mid);
+                collisionSegments.add(currentCollisionSegment);
+            } else {
+                currentCollisionSegment.addEdge(segmentEnd.mid);
+            }
+        } else {
+            List<IMesh> mesh = createWallSegmentMeshes(smallSegmentStart, segmentEnd, false);
+            controller.getScene().add3DObjects(mesh);
+            smallSegmentMeshes.addAll(mesh);
+        }
+
+        if (smallSegmentCounter % MAX_COLLISION_SEGMENT_SIZE == 0) {
             mergeMeshes();
         }
     }
 
-    private void mergeTmpSegments(Vec3 tmpSegmentEnd) {
+    private void mergeSmallSegments(WallCorner segmentEnd) {
+        mergeSmallSegments(segmentEnd, false);
+    }
+
+    private void mergeSmallSegments(WallCorner segmentEnd, boolean isFinalSegment) {
         IScene scene = controller.getScene();
 
-        for (IMesh m : tmpSegmentMeshes) {
-            scene.remove3DObject(m);
-        }
-        tmpSegmentMeshes.clear();
+        scene.remove3DObjects(smallSegmentMeshes);
+        smallSegmentMeshes.clear();
 
-        texOff = tmpTexOff;
+        lSmallTexOff = lBigTexOff;
+        rSmallTexOff = rBigTexOff;
 
-        IMesh mesh = makeWallSegment(tmpSegmentStart.x, tmpSegmentStart.y, tmpSegmentEnd.x, tmpSegmentEnd.y);
-        controller.getScene().add3DObject(mesh);
+        List<IMesh> mesh = createWallSegmentMeshes(bigSegmentStart, segmentEnd, isFinalSegment);
+        controller.getScene().add3DObjects(mesh);
+        bigSegmentMeshes.addAll(mesh);
 
-        tmpTexOff = texOff;
+        lBigTexOff = lSmallTexOff;
+        rBigTexOff = rSmallTexOff;
 
-        tmpSegmentStart = tmpSegmentEnd;
+        bigSegmentStart = segmentEnd;
     }
 
     private void mergeMeshes() {
-        wallPartCounter = 0;
-        currentSegmentMeshes = MeshUtilities.mergeMeshes(currentSegmentMeshes);
-        currentSegment = null;
+        IScene scene = controller.getScene();
+
+        scene.remove3DObjects(bigSegmentMeshes);
+        bigSegmentMeshes = MeshUtilities.mergeMeshes(bigSegmentMeshes);
+        scene.add3DObjects(bigSegmentMeshes);
+
+        smallSegmentCounter = 0;
+        currentCollisionSegment = null;
     }
 
-    private IMesh makeWallSegment(float x0, float y0, float x1, float y1) {
-        float dx = (x1 - x0);
-        float dy = (y1 - y0);
-        float length = 0.5f * (float) Math.sqrt(dx * dx + dy * dy);
+    private List<IMesh> createWallSegmentMeshes(WallCorner start, WallCorner end, boolean addClosingPart) {
+        Vec3 perpendicular = end.mid.subtract(start.mid).cross(TOP_VEC).normalize();
+        end.left = end.mid.add(perpendicular.scale(-WALL_THICKNESS));
+        end.right = end.mid.add(perpendicular.scale(WALL_THICKNESS));
 
-        float[] vertices = {
+        if (start.left == null) {
+            start.isStartCorner = true;
+            start.left = start.mid.add(perpendicular.scale(-WALL_THICKNESS));
+            start.right = start.mid.add(perpendicular.scale(WALL_THICKNESS));
+        }
+        boolean addStartingPart = start.isStartCorner;
+
+
+        final float lx0 = start.left.x;
+        final float ly0 = start.left.y;
+        final float lx1 = end.left.x;
+        final float ly1 = end.left.y;
+
+        final float dlx = (lx1 - lx0);
+        final float dly = (ly1 - ly0);
+        final float llength = 0.5f * (float) Math.sqrt(dlx * dlx + dly * dly);
+
+        final float rx0 = start.right.x;
+        final float ry0 = start.right.y;
+        final float rx1 = end.right.x;
+        final float ry1 = end.right.y;
+
+        final float drx = (rx1 - rx0);
+        final float dry = (ry1 - ry0);
+        final float rlength = 0.5f * (float) Math.sqrt(drx * drx + dry * dry);
+
+        float[] sideVertices = {
                 // LEFT WALL
-                x0, y0 + WALL_THICKNESS, 0,
-                x0, y0 + WALL_THICKNESS, WALL_HEIGHT,
-                x1, y1 + WALL_THICKNESS, 0,
+                lx0, ly0, 0,
+                lx0, ly0, WALL_HEIGHT,
+                lx1, ly1, 0,
 
-                x1, y1 + WALL_THICKNESS, 0,
-                x0, y0 + WALL_THICKNESS, WALL_HEIGHT,
-                x1, y1 + WALL_THICKNESS, WALL_HEIGHT,
+                lx1, ly1, 0,
+                lx0, ly0, WALL_HEIGHT,
+                lx1, ly1, WALL_HEIGHT,
 
                 // RIGHT WALL
-                x1, y1 - WALL_THICKNESS, 0,
-                x0, y0 - WALL_THICKNESS, WALL_HEIGHT,
-                x0, y0 - WALL_THICKNESS, 0,
+                rx1, ry1, 0,
+                rx0, ry0, WALL_HEIGHT,
+                rx0, ry0, 0,
 
-                x1, y1 - WALL_THICKNESS, WALL_HEIGHT,
-                x0, y0 - WALL_THICKNESS, WALL_HEIGHT,
-                x1, y1 - WALL_THICKNESS, 0,
-
+                rx1, ry1, WALL_HEIGHT,
+                rx0, ry0, WALL_HEIGHT,
+                rx1, ry1, 0,
+        };
+        float[] topVertices = {
                 // TOP
-                x0, y0 + WALL_THICKNESS, WALL_HEIGHT,
-                x0, y0 - WALL_THICKNESS, WALL_HEIGHT,
-                x1, y1 + WALL_THICKNESS, WALL_HEIGHT,
+                lx0, ly0, WALL_HEIGHT,
+                rx0, ry0, WALL_HEIGHT,
+                lx1, ly1, WALL_HEIGHT,
 
-                x0, y0 - WALL_THICKNESS, WALL_HEIGHT,
-                x1, y1 - WALL_THICKNESS, WALL_HEIGHT,
-                x1, y1 + WALL_THICKNESS, WALL_HEIGHT,
+                rx0, ry0, WALL_HEIGHT,
+                rx1, ry1, WALL_HEIGHT,
+                lx1, ly1, WALL_HEIGHT,
         };
         float[] texCoords = {
                 // LEFT WALL
-                0, texOff,
-                1, texOff,
-                0, texOff + length,
+                0, lSmallTexOff,
+                1, lSmallTexOff,
+                0, lSmallTexOff + llength,
 
-                0, texOff + length,
-                1, texOff,
-                1, texOff + length,
+                0, lSmallTexOff + llength,
+                1, lSmallTexOff,
+                1, lSmallTexOff + llength,
 
                 // RIGHT WALL
-                0, texOff + length,
-                1, texOff,
-                0, texOff,
+                0, rSmallTexOff + rlength,
+                1, rSmallTexOff,
+                0, rSmallTexOff,
 
-                1, texOff + length,
-                1, texOff,
-                0, texOff + length,
-
-                // TOP
-                0, 0, //texOff, 0,
-                0, 0, //texOff, WALL_THICKNESS,
-                0, 0, //texOff + length, 0,
-
-                0, 0, //texOff, WALL_THICKNESS,
-                0, 0, //texOff + length, WALL_THICKNESS,
-                0, 0, //texOff + length, 0,
+                1, rSmallTexOff + rlength,
+                1, rSmallTexOff,
+                0, rSmallTexOff + rlength,
         };
 
-        texOff += length;
+        lSmallTexOff += llength;
+        rSmallTexOff += rlength;
 
-        // TRIANGLE_STRIP and TRIANGLE_FAN do'nt seem to be supported
-        return new DefaultMesh(IMesh.Primitive.TRIANGLES, material, DefaultGeometry.createVCM(vertices, colors, texCoords), IMesh.Queue.DEPTH);
-        //return new DefaultMesh(IMesh.Primitive.TRIANGLES, material, DefaultGeometry.createV(vertices), IMesh.Queue.DEPTH);
+        ArrayList<IMesh> result = new ArrayList<>();
+        result.add(new DefaultMesh(IMesh.Primitive.TRIANGLES, sideMaterial, DefaultGeometry.createVCM(sideVertices, sideColors, texCoords), IMesh.Queue.DEPTH));
+        result.add(new DefaultMesh(IMesh.Primitive.TRIANGLES, topMaterial, DefaultGeometry.createVC(topVertices, topColors), IMesh.Queue.DEPTH));
+        if (addStartingPart) {
+            result.add(createClosingPartSegment(start, false));
+        }
+        if (addClosingPart) {
+            result.add(createClosingPartSegment(end, true));
+        }
+        return result;
+    }
+
+    private IMesh createClosingPartSegment(WallCorner corner, boolean isEnd) {
+        float[] vertices = {
+                corner.right.x, corner.right.y, 0,
+                corner.left .x, corner.left .y, WALL_HEIGHT,
+                corner.left .x, corner.left .y, 0,
+
+                corner.right.x, corner.right.y, WALL_HEIGHT,
+                corner.left .x, corner.left .y, WALL_HEIGHT,
+                corner.right.x, corner.right.y, 0,
+        };
+        if (isEnd) {
+            int start = 0;
+            int end = vertices.length - 3;
+
+            while (start < end) {
+                for (int i = 0; i < 3; i++) {
+                    float tmp = vertices[end+i];
+                    vertices[end+i] = vertices[start+i];
+                    vertices[start+i] = tmp;
+                }
+
+                start += 3;
+                end -= 3;
+            }
+        }
+
+
+        return new DefaultMesh(IMesh.Primitive.TRIANGLES, topMaterial, DefaultGeometry.createVC(vertices, topColors), IMesh.Queue.DEPTH);
+    }
+
+    private class WallCorner
+    {
+        public final Vec3 mid;
+        public Vec3 left;
+        public Vec3 right;
+        public boolean isStartCorner = false;
+
+        public WallCorner(Vec3 mid) {
+            this.mid = mid;
+        }
     }
 }
