@@ -15,7 +15,7 @@ import ch.fhnw.util.color.RGBA;
 
 public class BorderWall {
 	
-	private static final float WALL_HEIGHT = 20;
+	private static final float WALL_HEIGHT = 0.01f;
 	public static final float TEXTURE_OFFSET = 2f;
 	private IMesh[] wall;
 	private float[][] wallVertices;

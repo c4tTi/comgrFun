@@ -31,12 +31,14 @@ package ch.fhnw.comgr.tron.main;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.List;
 
 import ch.fhnw.comgr.tron.models.BorderWall;
 import ch.fhnw.comgr.tron.models.Player;
 import ch.fhnw.comgr.tron.models.Team;
 import ch.fhnw.comgr.tron.ui.BikeTool;
 import ch.fhnw.comgr.tron.ui.Grid;
+import ch.fhnw.comgr.tron.ui.Skybox;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.platform.Platform;
@@ -111,6 +113,9 @@ public class TronTeam {
             IMesh grid = Grid.createSquareMapStandardMat(MAP_SIZE, (int) (MAP_SIZE / 2));
             controller.getScene().add3DObject(grid);
 
+            List<IMesh> skybox = Skybox.createSkybox(MAP_SIZE * 100);
+            controller.getScene().add3DObjects(skybox);
+            
             CreateBorderWalls(controller);
             CreatePlayers(controller, bikeTool);
             CreateLights(scene);
