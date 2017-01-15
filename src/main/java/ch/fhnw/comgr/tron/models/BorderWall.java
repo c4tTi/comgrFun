@@ -15,7 +15,7 @@ import ch.fhnw.util.color.RGBA;
 
 public class BorderWall {
 	
-	private static final float WALL_HEIGHT = 0.01f;
+	private static final float WALL_HEIGHT = 2.5f;
 	public static final float TEXTURE_OFFSET = 2f;
 	private IMesh[] wall;
 	private float[][] wallVertices;
@@ -39,23 +39,24 @@ public class BorderWall {
 //				texCoords[i] = 1f;
 //			}
 
-			int texOffset = (int) mapSize/25;
+			int texOffsetX = (int) (mapSize/12.5);
+			float texOffsetY = WALL_HEIGHT/10.f;
 
 			float[] texCoordsOne = {
 					0, 0,
-					0, texOffset,
-					2*texOffset, texOffset,
+					0, texOffsetY,
+					texOffsetX, texOffsetY,
 					0, 0,
-					2*texOffset, texOffset,
-					2*texOffset, 0,
+					texOffsetX, texOffsetY,
+					texOffsetX, 0,
 			};
 			float[] texCoordsTwo = {
-					2*texOffset, texOffset,
-					0, texOffset,
+					texOffsetX, texOffsetY,
+					0, texOffsetY,
 					0, 0,
 
-					2*texOffset, 0,
-					2*texOffset, texOffset,
+					texOffsetX, 0,
+					texOffsetX, texOffsetY,
 					0, 0,
 			};
 			
