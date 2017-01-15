@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.fhnw.comgr.tron.ui.BikeTool;
-import ch.fhnw.comgr.tron.ui.Grid;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.formats.obj.ObjReader;
 import ch.fhnw.ether.scene.camera.DefaultCameraControl;
@@ -14,8 +13,8 @@ import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.math.Mat4;
-import ch.fhnw.util.math.Vec2;
 import ch.fhnw.util.math.Vec3;
+import ch.fhnw.util.math.geometry.BoundingBox;
 
 /**
  * Created by Serquet.
@@ -60,6 +59,7 @@ public class Player {
 
     public void enable() throws IOException {
         bike = LoadBikeModel();
+    	bike.setPosition(position);
         controller.getScene().add3DObject(bike);
 
         controller.animate((time, interval) -> {   
@@ -104,20 +104,16 @@ public class Player {
 	 * Checks and returns if the player has collided with player p.
 	 */
 	public boolean collidedWithPlayer(Player p) {
-		return (pointInPlayer(position.x - BIKE_WIDTH/2, position.y - BIKE_LENGTH/2, p)
-				|| pointInPlayer(position.x - BIKE_WIDTH/2, position.y + BIKE_LENGTH/2, p)
-				|| pointInPlayer(position.x + BIKE_WIDTH/2, position.y - BIKE_LENGTH/2, p)
-				|| pointInPlayer(position.x + BIKE_WIDTH/2, position.y + BIKE_LENGTH/2, p));
+		BoundingBox bb = bike.getBounds();
+		return bb.intersects(p.getBoundingBox());
 	}
 	
 	/**
 	 * Checks and returns if the point (x,y) is inside the position of player p.
 	 */
-	private boolean pointInPlayer(float x, float y, Player p) {
-		return (x > p.getPosition().x - BIKE_WIDTH/2 
-				&& x < p.getPosition().x + BIKE_WIDTH
-				&& y > p.getPosition().y - BIKE_LENGTH
-				&& y < p.getPosition().y + BIKE_LENGTH);
+	public boolean pointInPlayer(float x, float y) {
+		BoundingBox bb = bike.getBounds();
+		return bb.contains(new Vec3(x, y, 0.5f));
 	}
 	
 	public void die() {
@@ -125,6 +121,8 @@ public class Player {
 	}
     
     public Mat4 getTransforma() { return bike.getTransform(); }
+    
+    public BoundingBox getBoundingBox() { return bike.getBounds(); }
 	
     public void setPosition(Vec3 newPosition) { position = newPosition; }
     public Vec3 getPosition() { return position; }

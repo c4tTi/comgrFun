@@ -49,7 +49,9 @@ public class WallSegment {
     }
 
     public boolean checkCollision(Player p) {
-        // TODO: return true if the player collides with one of the internal segments
+        for(Vec3 v : edges) {
+        	if(p.pointInPlayer(v.x, v.y)) return true;
+        }
         return false;
     }
 }
