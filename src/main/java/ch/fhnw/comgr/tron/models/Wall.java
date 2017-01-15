@@ -1,5 +1,6 @@
 package ch.fhnw.comgr.tron.models;
 
+import ch.fhnw.comgr.tron.render.WallMaterial;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.image.IGPUImage;
 import ch.fhnw.ether.scene.IScene;
@@ -26,8 +27,8 @@ public class Wall {
     private static final float WALL_HEIGHT = 1.5f;
     private static final float WALL_THICKNESS = 0.1f;
 
-    private static final int MAX_SMALL_SEGMENTS = 15;
-    private static final int MAX_COLLISION_SEGMENT_SIZE = MAX_SMALL_SEGMENTS * 20;
+    private static final int MAX_SMALL_SEGMENTS = 7;
+    private static final int MAX_COLLISION_SEGMENT_SIZE = MAX_SMALL_SEGMENTS * 10;
     private static final Vec3 TOP_VEC = new Vec3(0f, 0f, 1f);
 
     private final IController controller;
@@ -35,7 +36,7 @@ public class Wall {
     private final Player playerA;
     private final Player playerB;
 
-    private IMaterial sideMaterial;
+    private WallMaterial sideMaterial;
     private IMaterial topMaterial;
     private float[] sideColors;
     private float[] topColors;
@@ -89,6 +90,9 @@ public class Wall {
             } else {
                 stopWallBuilding();
             }
+
+            //sideMaterial.setWhiteGain((float) time % 1);
+            sideMaterial.setWhiteGain((float) Math.sin(time) + 1f);
         });
     }
 
@@ -104,12 +108,14 @@ public class Wall {
     private void createMaterial() {
         IGPUImage t = null;
         try {
-            t = IGPUImage.read(Wall.class.getResource("/assets/textures/Microscheme.jpg"));
+            t = IGPUImage.read(Wall.class.getResource("/assets/textures/Microscheme2.jpg"));
+            t = IGPUImage.read(Wall.class.getResource("/textures/tron_wall.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        sideMaterial = new ColorMapMaterial(team.getTeamColor(), t, true);
+        //sideMaterial = new ColorMapMaterial(team.getTeamColor(), t, true);
+        sideMaterial = new WallMaterial(team.getTeamColor(), t);
         topMaterial  = new ColorMaterial(team.getTeamColor());
     }
 
