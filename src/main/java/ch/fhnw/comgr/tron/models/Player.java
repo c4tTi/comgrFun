@@ -5,13 +5,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.fhnw.comgr.tron.ui.BikeTool;
+import ch.fhnw.comgr.tron.ui.Grid;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.formats.obj.ObjReader;
+import ch.fhnw.ether.image.IGPUImage;
 import ch.fhnw.ether.scene.camera.DefaultCameraControl;
 import ch.fhnw.ether.scene.camera.ICamera;
+import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
+import ch.fhnw.ether.scene.mesh.IMesh.Flag;
 import ch.fhnw.ether.scene.mesh.MeshUtilities;
+import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
+import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
+import ch.fhnw.ether.scene.mesh.material.IMaterial;
 import ch.fhnw.ether.view.IView;
+import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 import ch.fhnw.util.math.geometry.BoundingBox;
@@ -35,7 +43,9 @@ public class Player {
     private float rotationAngle;
     private float curveLeanAngle;
     private boolean isTurningLeft, isTurningRight;
-    private boolean dead;
+    private boolean dead, exploding;
+    private int explosionFrame;
+    ExplosionParticle[] explosionParticles;
     private int leftKey, rightKey;
 
     private static int i;
@@ -62,6 +72,17 @@ public class Player {
 
         controller.animate((time, interval) -> {  
         	if(dead) {
+        		if(exploding) {
+        			if(explosionFrame < ExplosionParticle.MAX_LIFESPAN) {
+        				explosionFrame++;
+        				for(int i = 0; i < explosionParticles.length; i++) {
+        					explosionParticles[i].update();
+        				}
+        			}
+        			else {
+        				exploding = false;
+        			}
+        		}
         	}
         	else {
 	        	Mat4 trans = bikeTool.update(this);
@@ -115,6 +136,19 @@ public class Player {
 	
 	public void die() {
 		dead = true;
+		controller.getScene().remove3DObject(bike);
+		explode();
+	}
+	
+	private void explode() {
+		exploding = true;
+		int amountOfParticles = 200;
+		
+		explosionParticles = new ExplosionParticle[amountOfParticles];
+		
+		for(int i = 0; i < amountOfParticles; i++) {
+			explosionParticles[i] = new ExplosionParticle(controller, position, team.getTeamColor());
+		}
 	}
     
     public Mat4 getTransforma() { return bike.getTransform(); }
