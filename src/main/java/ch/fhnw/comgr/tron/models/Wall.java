@@ -27,8 +27,8 @@ public class Wall {
     private static final float WALL_HEIGHT = 1.5f;
     private static final float WALL_THICKNESS = 0.1f;
 
-    private static final int MAX_SMALL_SEGMENTS = 15;
-    private static final int MAX_COLLISION_SEGMENT_SIZE = MAX_SMALL_SEGMENTS * 20;
+    private static final int MAX_SMALL_SEGMENTS = 7;
+    private static final int MAX_COLLISION_SEGMENT_SIZE = MAX_SMALL_SEGMENTS * 10;
     private static final Vec3 TOP_VEC = new Vec3(0f, 0f, 1f);
 
     private final IController controller;
