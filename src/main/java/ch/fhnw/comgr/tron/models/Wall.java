@@ -10,7 +10,6 @@ import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
 import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
 import ch.fhnw.ether.scene.mesh.material.ColorMaterial;
 import ch.fhnw.ether.scene.mesh.material.IMaterial;
-import ch.fhnw.ether.scene.mesh.material.ShadedMaterial;
 import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Vec3;
 
@@ -25,6 +24,9 @@ public class Wall {
     private static final float MAX_BIND_DISTANCE = 20f;
     private static final float WALL_HEIGHT = 1.5f;
     private static final float WALL_THICKNESS = 0.1f;
+
+    private static final int MERGED_WALL_PART_SIZE = 15;
+    private static final int WALL_SEGMENT_SIZE = MERGED_WALL_PART_SIZE * 20;
 
     private final IController controller;
     private final Team team;
@@ -41,7 +43,10 @@ public class Wall {
     private Vec3 tmpSegmentStart;
     private List<IMesh> tmpSegmentMeshes = new ArrayList<>();
     private List<IMesh> currentSegmentMeshes = new ArrayList<>();
-    private int segmentCounter = 0;
+    private int wallPartCounter = 0;
+
+    private List<WallSegment> segments = new ArrayList<>();
+    private WallSegment currentSegment;
 
 
     public Wall(IController controller, Team team, Player playerA, Player playerB) {
@@ -50,8 +55,8 @@ public class Wall {
         this.playerA = playerA;
         this.playerB = playerB;
 
-        if (playerA == playerB) {
-            throw new RuntimeException();
+        if (playerA == playerB || playerA.getTeam() != playerB.getTeam()) {
+            throw new IllegalArgumentException();
         }
     }
 
@@ -62,12 +67,20 @@ public class Wall {
         controller.animate((time, interval) -> {
             // TODO: use squared distance maybe
             if (playerA.calculateDistance(playerB) < MAX_BIND_DISTANCE) {
-                //TODO: Generate laser thing between players 'player' and 'teamMember'
                 addWallSegment(playerA.getPointBetween(playerB));
             } else {
                 stopWallBuilding();
             }
         });
+    }
+
+    public boolean checkCollision(Player p) {
+        for (WallSegment s : segments) {
+            if (s.checkCollision(p)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void createMaterial() {
@@ -88,8 +101,9 @@ public class Wall {
         float g = Math.max(0.0f, teamColor.g - 0.2f);
         float b = Math.max(0.0f, teamColor.b - 0.2f);
 
-        colors = new float[4 * 18];
-        for (int i = 0; i < 12; i++) {
+        final int nrVertices = 18;
+        colors = new float[4 * nrVertices];
+        for (int i = 0; i < nrVertices; i++) {
             colors[4 * i] = r;
             colors[4 * i + 1] = g;
             colors[4 * i + 2] = b;
@@ -97,12 +111,10 @@ public class Wall {
         }
     }
 
-    public void addWallSegment(Vec3 newEdge) {
+    private void addWallSegment(Vec3 newEdge) {
         if (isWallBuilding) {
             addSegment(previousEdge, newEdge);
-        }
-        else
-        {
+        } else {
             tmpSegmentStart = newEdge;
         }
 
@@ -110,18 +122,25 @@ public class Wall {
         isWallBuilding = true;
     }
 
-    public void stopWallBuilding() {
+    private void stopWallBuilding() {
         isWallBuilding = false;
+        currentSegment = null;
 
         mergeTmpSegments(previousEdge);
         mergeMeshes();
     }
 
-    public void addSegment(Vec3 start, Vec3 end) {
-        segmentCounter++;
+    private void addSegment(Vec3 start, Vec3 end) {
+        wallPartCounter++;
 
-        if (segmentCounter % 10 == 0) {
+        if (wallPartCounter % MERGED_WALL_PART_SIZE == 0) {
             mergeTmpSegments(end);
+            if (currentSegment == null) {
+                currentSegment = new WallSegment(tmpSegmentStart, end);
+                segments.add(currentSegment);
+            } else {
+                currentSegment.addEdge(end);
+            }
         } else {
             IMesh mesh = makeWallSegment(start.x, start.y, end.x, end.y);
             controller.getScene().add3DObject(mesh);
@@ -129,7 +148,7 @@ public class Wall {
             tmpTexOff = texOff;
         }
 
-        if (segmentCounter % 100 == 0) {
+        if (wallPartCounter % WALL_SEGMENT_SIZE == 0) {
             mergeMeshes();
         }
     }
@@ -153,42 +172,43 @@ public class Wall {
     }
 
     private void mergeMeshes() {
-        segmentCounter = 0;
+        wallPartCounter = 0;
         currentSegmentMeshes = MeshUtilities.mergeMeshes(currentSegmentMeshes);
+        currentSegment = null;
     }
 
-    public IMesh makeWallSegment(float x0, float y0, float x1, float y1) {
+    private IMesh makeWallSegment(float x0, float y0, float x1, float y1) {
         float dx = (x1 - x0);
         float dy = (y1 - y0);
         float length = 0.5f * (float) Math.sqrt(dx * dx + dy * dy);
 
         float[] vertices = {
                 // LEFT WALL
-                x0, y0+WALL_THICKNESS, 0,
-                x0, y0+WALL_THICKNESS, WALL_HEIGHT,
-                x1, y1+WALL_THICKNESS, 0,
+                x0, y0 + WALL_THICKNESS, 0,
+                x0, y0 + WALL_THICKNESS, WALL_HEIGHT,
+                x1, y1 + WALL_THICKNESS, 0,
 
-                x1, y1+WALL_THICKNESS, 0,
-                x0, y0+WALL_THICKNESS, WALL_HEIGHT,
-                x1, y1+WALL_THICKNESS, WALL_HEIGHT,
+                x1, y1 + WALL_THICKNESS, 0,
+                x0, y0 + WALL_THICKNESS, WALL_HEIGHT,
+                x1, y1 + WALL_THICKNESS, WALL_HEIGHT,
 
                 // RIGHT WALL
-                x1, y1-WALL_THICKNESS, 0,
-                x0, y0-WALL_THICKNESS, WALL_HEIGHT,
-                x0, y0-WALL_THICKNESS, 0,
+                x1, y1 - WALL_THICKNESS, 0,
+                x0, y0 - WALL_THICKNESS, WALL_HEIGHT,
+                x0, y0 - WALL_THICKNESS, 0,
 
-                x1, y1-WALL_THICKNESS, WALL_HEIGHT,
-                x0, y0-WALL_THICKNESS, WALL_HEIGHT,
-                x1, y1-WALL_THICKNESS, 0,
+                x1, y1 - WALL_THICKNESS, WALL_HEIGHT,
+                x0, y0 - WALL_THICKNESS, WALL_HEIGHT,
+                x1, y1 - WALL_THICKNESS, 0,
 
                 // TOP
-                x0, y0+WALL_THICKNESS, WALL_HEIGHT,
-                x0, y0-WALL_THICKNESS, WALL_HEIGHT,
-                x1, y1+WALL_THICKNESS, WALL_HEIGHT,
+                x0, y0 + WALL_THICKNESS, WALL_HEIGHT,
+                x0, y0 - WALL_THICKNESS, WALL_HEIGHT,
+                x1, y1 + WALL_THICKNESS, WALL_HEIGHT,
 
-                x0, y0-WALL_THICKNESS, WALL_HEIGHT,
-                x1, y1-WALL_THICKNESS, WALL_HEIGHT,
-                x1, y1+WALL_THICKNESS, WALL_HEIGHT,
+                x0, y0 - WALL_THICKNESS, WALL_HEIGHT,
+                x1, y1 - WALL_THICKNESS, WALL_HEIGHT,
+                x1, y1 + WALL_THICKNESS, WALL_HEIGHT,
         };
         float[] texCoords = {
                 // LEFT WALL
@@ -210,13 +230,13 @@ public class Wall {
                 0, texOff + length,
 
                 // TOP
-                texOff, 0,
-                texOff, WALL_THICKNESS,
-                texOff + length, 0,
+                0, 0, //texOff, 0,
+                0, 0, //texOff, WALL_THICKNESS,
+                0, 0, //texOff + length, 0,
 
-                texOff, WALL_THICKNESS,
-                texOff + length, WALL_THICKNESS,
-                texOff + length, 0,
+                0, 0, //texOff, WALL_THICKNESS,
+                0, 0, //texOff + length, WALL_THICKNESS,
+                0, 0, //texOff + length, 0,
         };
 
         texOff += length;

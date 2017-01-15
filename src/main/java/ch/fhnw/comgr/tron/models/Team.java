@@ -33,6 +33,10 @@ public class Team {
         return players;
     }
 
+    public ArrayList<Wall> getWalls() {
+        return walls;
+    }
+
     public void enable() {
         for (int i = 0; i < players.size(); i++) {
             for (int j = i+1; j < players.size(); j++) {

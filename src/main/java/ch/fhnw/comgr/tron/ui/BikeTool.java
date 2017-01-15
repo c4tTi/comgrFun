@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ch.fhnw.comgr.tron.models.Player;
 import ch.fhnw.comgr.tron.models.Team;
+import ch.fhnw.comgr.tron.models.Wall;
 import ch.fhnw.ether.controller.event.IKeyEvent;
 import ch.fhnw.ether.controller.event.IPointerEvent;
 import ch.fhnw.ether.controller.tool.ITool;
@@ -39,6 +40,15 @@ public class BikeTool implements ITool{
 			if(player != otherPlayer && player.collidedWithPlayer(otherPlayer)) {
 				player.die();
 				otherPlayer.die();
+			}
+		}
+
+		// Check for collision with walls
+		for (Team team : teams) {
+			for (Wall wall : team.getWalls()) {
+				if (wall.checkCollision(player)) {
+					player.die();
+				}
 			}
 		}
 	}
