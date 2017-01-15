@@ -25,7 +25,6 @@ public class Player {
 	private static final float BIKE_LENGTH = 0.9f;
 	private static final int CAMERA_DISTANCE = 20;
 	private static final int CAMERA_HEIGHT = 10;
-	private static final float MAX_CURVE_LEAN_ANGLE = 30;
     private final IController controller;
     private final BikeTool bikeTool;
     private final IView view;
@@ -68,25 +67,16 @@ public class Player {
         		System.out.println("lul u ded");
         	}
         	else {
-	        	bikeTool.update(this);
+	        	Mat4 trans = bikeTool.update(this);
+                bike.setTransform(Mat4.multiply(Mat4.rotate(rotationAngle, Vec3.Z), Mat4.rotate(curveLeanAngle, Vec3.X)));
+
 	        	float x = (float) (Math.cos(Math.toRadians(rotationAngle)) * CAMERA_DISTANCE);
 	        	float y = (float) (Math.sin(Math.toRadians(rotationAngle)) * CAMERA_DISTANCE);
 	        	cam.setPosition(position.add(new Vec3(-x, -y, CAMERA_HEIGHT)));
 	            cam.setTarget(position);
 	            //System.out.println("Position: " + (int) position.x + "/" + (int) position.y);
 	        	
-	                bike.setPosition(position);
-	                if(isTurningRight) {
-	                	if(curveLeanAngle < MAX_CURVE_LEAN_ANGLE) curveLeanAngle++;
-	                }
-	                else if(isTurningLeft) {
-	                	if(curveLeanAngle > -MAX_CURVE_LEAN_ANGLE) curveLeanAngle--;
-	                }
-	                else {
-	                	if(curveLeanAngle > 0) curveLeanAngle--;
-	                	else if(curveLeanAngle < 0) curveLeanAngle++;
-	                }
-	                bike.setTransform(Mat4.multiply(Mat4.rotate(rotationAngle, Vec3.Z), Mat4.rotate(curveLeanAngle, Vec3.X)));
+                bike.setPosition(position);
         	}
         });
 
@@ -134,12 +124,16 @@ public class Player {
 		dead = true;
 	}
     
-    
+    public Mat4 getTransforma() { return bike.getTransform(); }
+	
     public void setPosition(Vec3 newPosition) { position = newPosition; }
     public Vec3 getPosition() { return position; }
     
     public void setRotationAngle(float newRotationAngle) { rotationAngle = newRotationAngle; }
     public float getRotationAngle() { return rotationAngle; }
+    
+    public void setCurveLeanAngle(float curveLeanAngle) { this.curveLeanAngle = curveLeanAngle; }
+    public float getCurveLeanAngle() { return curveLeanAngle; }
     
     public void setIsTurningLeft(boolean b) { isTurningLeft = b; }
     public boolean isTurningLeft() { return isTurningLeft; }

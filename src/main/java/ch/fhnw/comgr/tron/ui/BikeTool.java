@@ -9,12 +9,14 @@ import ch.fhnw.ether.controller.event.IKeyEvent;
 import ch.fhnw.ether.controller.event.IPointerEvent;
 import ch.fhnw.ether.controller.tool.ITool;
 import ch.fhnw.ether.view.IView;
+import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 
 public class BikeTool implements ITool{
 	
 	private static final float TURNING_SPEED = 2f;
 	private static final float SPEED = 0.2f;
+	private static final float MAX_CURVE_LEAN_ANGLE = 30;
 	Player[] players;
 	Team[] teams;
 	
@@ -26,14 +28,24 @@ public class BikeTool implements ITool{
 	/**
 	 * Updates position, rotation and wall bindings of given player.
 	 */
-	public void update(Player player) {
+	public Mat4 update(Player player) {
 		float x, y;
 		x = (float) (Math.cos(Math.toRadians(player.getRotationAngle())) * SPEED);
 		y = (float) (Math.sin(Math.toRadians(player.getRotationAngle())) * SPEED);
-		player.setPosition(player.getPosition().add(new Vec3(x, y, 0)));
+		//player.setPosition(player.getPosition().add(new Vec3(x, y, 0)));
 		
-		if(player.isTurningLeft()) player.setRotationAngle(player.getRotationAngle() + TURNING_SPEED);
-		if(player.isTurningRight()) player.setRotationAngle(player.getRotationAngle() - TURNING_SPEED);
+		float curveLeanAngle = player.getCurveLeanAngle();
+		
+		if(player.isTurningLeft()) {
+			player.setRotationAngle(player.getRotationAngle() + TURNING_SPEED);
+			if(curveLeanAngle > -MAX_CURVE_LEAN_ANGLE) player.setCurveLeanAngle(curveLeanAngle - 3);
+		} else if(player.isTurningRight()) {
+			player.setRotationAngle(player.getRotationAngle() - TURNING_SPEED);
+			if(curveLeanAngle < MAX_CURVE_LEAN_ANGLE) player.setCurveLeanAngle(curveLeanAngle + 3);
+		} else {
+			if(curveLeanAngle > 0) player.setCurveLeanAngle(curveLeanAngle - 3);
+			if(curveLeanAngle < 0) player.setCurveLeanAngle(curveLeanAngle + 3);
+		}
 		
 		//Check for collision between players
 		for(Player otherPlayer : players) {
@@ -51,6 +63,13 @@ public class BikeTool implements ITool{
 				}
 			}
 		}
+		
+		Mat4 trans = player.getTransforma();
+		Vec3 pos = new Vec3(x,y,0);
+		player.setPosition(player.getPosition().add(pos));
+		Mat4 move = Mat4.translate(pos);
+		
+		return Mat4.multiply(trans,move);
 	}
 	
 	@Override
