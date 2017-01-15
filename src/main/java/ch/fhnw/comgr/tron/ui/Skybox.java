@@ -32,7 +32,7 @@ public class Skybox {
 	}
 	
 	
-	public static List<IMesh> createSkybox(float lengthMap){
+	public static List<IMesh> createSkybox(float lengthMap, float zHeight){
 		IMesh topMesh, bottomMesh, frontMesh, leftMesh, rightMesh, backMesh;
 		
 		IMaterial topMat, bottomMat, frontMat, leftMat, rightMat, backMat;
@@ -53,21 +53,21 @@ public class Skybox {
 		
 		List<IMesh> mySkyboxMeshes = new ArrayList<IMesh>();
 		
-		bottomMesh.setPosition(new Vec3(0f,0f,-lengthMap));
+		bottomMesh.setPosition(new Vec3(0f,0f,-lengthMap + zHeight));
 		frontMesh.setTransform(Mat4.rotate(90, Vec3.X));
-		frontMesh.setPosition(new Vec3(0f, lengthMap, 0f));
+		frontMesh.setPosition(new Vec3(0f, lengthMap, zHeight));
 
 		leftMesh.setTransform(Mat4.multiply(Mat4.rotate(90, Vec3.X), Mat4.rotate(90, Vec3.Y)));
-		leftMesh.setPosition(new Vec3(-lengthMap, 0f, 0f));
+		leftMesh.setPosition(new Vec3(-lengthMap, 0f, zHeight));
 		
 		rightMesh.setTransform(Mat4.multiply(Mat4.rotate(90, Vec3.X), Mat4.rotate(-90, Vec3.Y)));
-		rightMesh.setPosition(new Vec3(lengthMap, 0f, 0f));
+		rightMesh.setPosition(new Vec3(lengthMap, 0f, zHeight));
 		
 		backMesh.setTransform(Mat4.multiply(Mat4.rotate(90, Vec3.X), Mat4.rotate(180, Vec3.Y)));
-		backMesh.setPosition(new Vec3(0f, -lengthMap, 0f));
+		backMesh.setPosition(new Vec3(0f, -lengthMap, zHeight));
 		
 		topMesh.setTransform(Mat4.rotate(180, Vec3.X));
-		topMesh.setPosition(new Vec3(0f,0f, lengthMap));
+		topMesh.setPosition(new Vec3(0f,0f, lengthMap + zHeight));
 		
 		mySkyboxMeshes.add(topMesh);
 		mySkyboxMeshes.add(bottomMesh);

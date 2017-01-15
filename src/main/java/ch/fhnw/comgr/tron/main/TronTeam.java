@@ -113,7 +113,7 @@ public class TronTeam {
             IMesh grid = Grid.createSquareMapStandardMat(MAP_SIZE, (int) (MAP_SIZE / 2));
             controller.getScene().add3DObject(grid);
 
-            List<IMesh> skybox = Skybox.createSkybox(MAP_SIZE * 100);
+            List<IMesh> skybox = Skybox.createSkybox(MAP_SIZE * 100, -MAP_SIZE *45);
             controller.getScene().add3DObjects(skybox);
             
             CreateBorderWalls(controller);
