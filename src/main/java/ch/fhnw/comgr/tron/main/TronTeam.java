@@ -127,6 +127,17 @@ public class TronTeam {
 
         int window_width = full_width / NR_OF_TEAMS;
         int window_height = full_height / TEAM_SIZES;
+        
+        final IView view = new DefaultView(controller,
+        		0,
+        		0,
+        		full_width, full_height,
+                IView.RENDER_VIEW, "Game");
+        
+        ICamera cam = controller.getCamera(view);
+        
+        cam.setPosition(new Vec3(-100,0,200));
+        cam.setTarget(Vec3.ZERO);
 
         for (int i  = 0; i < NR_OF_TEAMS; i++)
         {
@@ -153,15 +164,7 @@ public class TronTeam {
         int teamOffset   = playerIndex / TEAM_SIZES;
         int playerOffset = playerIndex % TEAM_SIZES;
 
-        final IView view = new DefaultView(controller,
-                teamOffset*window_width,
-                playerOffset*window_height,
-                window_width, window_height,
-                IView.RENDER_VIEW, "Player " + playerIndex);
-        renderManager.getCamera(view);
-
-        final ICamera cam = renderManager.getCamera(view);
-        Player player = new Player(controller, view, cam, teams[teamOffset], leftKey, rightKey, bikeTool);
+        Player player = new Player(controller, teams[teamOffset], leftKey, rightKey, bikeTool);
         players[playerIndex] = player;
         teams[teamOffset].AddPlayer(player);
         player.enable();

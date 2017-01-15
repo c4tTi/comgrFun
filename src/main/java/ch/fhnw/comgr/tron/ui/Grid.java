@@ -18,8 +18,8 @@ public class Grid {
 	public static IMesh makeGrid() {
 		List<Vec3> lines = new ArrayList<>();
 
-		int gridNumLines = 1200;
-		float gridSpacing = 1f;
+		int gridNumLines = 50;
+		float gridSpacing = 5f;
 
 		// add axis lines
 		float e = 0.5f * gridSpacing * (gridNumLines + 1);

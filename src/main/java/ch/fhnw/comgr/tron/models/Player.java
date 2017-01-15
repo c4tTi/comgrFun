@@ -28,9 +28,6 @@ public class Player {
 	private static final float MAX_CURVE_LEAN_ANGLE = 30;
     private final IController controller;
     private final BikeTool bikeTool;
-    private final IView view;
-    private final ICamera cam;
-    private final DefaultCameraControl cameraControl;
 
     private final Team team;
 
@@ -44,13 +41,10 @@ public class Player {
 
     private static int i;
 
-    public Player(IController controller, IView view, ICamera cam, Team team, int leftKey, int rightKey, BikeTool bikeTool) {
+    public Player(IController controller, Team team, int leftKey, int rightKey, BikeTool bikeTool) {
         this.controller = controller;
-        this.view = view;
-        this.cam = cam;
         this.team = team;
 
-        this.cameraControl = new DefaultCameraControl(cam);
         this.leftKey = leftKey;
         this.rightKey = rightKey;
         this.bikeTool = bikeTool;
@@ -69,11 +63,7 @@ public class Player {
         	}
         	else {
 	        	bikeTool.update(this);
-	        	float x = (float) (Math.cos(Math.toRadians(rotationAngle)) * CAMERA_DISTANCE);
-	        	float y = (float) (Math.sin(Math.toRadians(rotationAngle)) * CAMERA_DISTANCE);
-	        	cam.setPosition(position.add(new Vec3(-x, -y, CAMERA_HEIGHT)));
-	            cam.setTarget(position);
-	            //System.out.println("Position: " + (int) position.x + "/" + (int) position.y);
+ 	            //System.out.println("Position: " + (int) position.x + "/" + (int) position.y);
 	        	
 	                bike.setPosition(position);
 	                if(isTurningRight) {
