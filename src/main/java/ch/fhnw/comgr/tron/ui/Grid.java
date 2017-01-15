@@ -6,13 +6,14 @@ import java.util.List;
 import ch.fhnw.ether.image.IGPUImage;
 import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
-import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.scene.mesh.IMesh.Primitive;
 import ch.fhnw.ether.scene.mesh.IMesh.Queue;
+import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
-import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
 import ch.fhnw.ether.scene.mesh.material.IMaterial;
 import ch.fhnw.ether.scene.mesh.material.LineMaterial;
+import ch.fhnw.ether.scene.mesh.material.ShadedMaterial;
+import ch.fhnw.util.color.RGB;
 import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Vec3;
 
@@ -47,7 +48,7 @@ public class Grid {
 		try {
 			IGPUImage t = IGPUImage.read(Grid.class.getResource("/textures/tron_floor.png"));
 			//IMaterial m = new ColorMapMaterial();
-			IMaterial m = new ColorMapMaterial(RGBA.WHITE, t, false);
+			IMaterial m = new ShadedMaterial(RGB.BLACK, RGB.WHITE, RGB.WHITE, RGB.BLACK, 0f, 0.5f, 1f, t);
 
 			return createSquareMap(lengthMap, m, materialCount);
 			

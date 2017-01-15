@@ -5,21 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.fhnw.comgr.tron.ui.BikeTool;
-import ch.fhnw.comgr.tron.ui.Grid;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.formats.obj.ObjReader;
-import ch.fhnw.ether.image.IGPUImage;
 import ch.fhnw.ether.scene.camera.DefaultCameraControl;
 import ch.fhnw.ether.scene.camera.ICamera;
-import ch.fhnw.ether.scene.mesh.DefaultMesh;
+import ch.fhnw.ether.scene.light.PointLight;
 import ch.fhnw.ether.scene.mesh.IMesh;
-import ch.fhnw.ether.scene.mesh.IMesh.Flag;
 import ch.fhnw.ether.scene.mesh.MeshUtilities;
-import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
-import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
-import ch.fhnw.ether.scene.mesh.material.IMaterial;
 import ch.fhnw.ether.view.IView;
-import ch.fhnw.util.color.RGBA;
+import ch.fhnw.util.color.RGB;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 import ch.fhnw.util.math.geometry.BoundingBox;
@@ -35,10 +29,10 @@ public class Player {
     private final IView view;
     private final ICamera cam;
     private final DefaultCameraControl cameraControl;
-
     private final Team team;
 
     private IMesh bike;
+    private PointLight light;
     private Vec3 position;
     private float rotationAngle;
     private float curveLeanAngle;
@@ -55,6 +49,8 @@ public class Player {
         this.view = view;
         this.cam = cam;
         this.team = team;
+        
+        
 
         this.cameraControl = new DefaultCameraControl(cam);
         this.leftKey = leftKey;
@@ -68,7 +64,9 @@ public class Player {
     public void enable() throws IOException {
         bike = LoadBikeModel();
     	bike.setPosition(position);
+    	light = new PointLight(position, team.getTeamColor().toRGB(), team.getTeamColor().toRGB(), 12);
         controller.getScene().add3DObject(bike);
+        controller.getScene().add3DObject(light);
 
         controller.animate((time, interval) -> {  
         	if(dead) {
@@ -93,7 +91,10 @@ public class Player {
 	        	cam.setPosition(position.add(new Vec3(-x, -y, CAMERA_HEIGHT)));
 	            cam.setTarget(position);
 	            //System.out.println("Position: " + (int) position.x + "/" + (int) position.y);
-	        	
+	            
+	            float xLight = (float) (Math.cos(Math.toRadians(rotationAngle)) * 7);
+	        	float yLight = (float) (Math.sin(Math.toRadians(rotationAngle)) * 7);
+	            light.setPosition(position.add(new Vec3(xLight, yLight,2)));
                 bike.setPosition(position);
         	}
         });
@@ -137,6 +138,7 @@ public class Player {
 	public void die() {
 		dead = true;
 		controller.getScene().remove3DObject(bike);
+		controller.getScene().remove3DObject(light);
 		explode();
 	}
 	
