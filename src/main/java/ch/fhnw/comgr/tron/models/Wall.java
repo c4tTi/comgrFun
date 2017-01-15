@@ -108,7 +108,6 @@ public class Wall {
     private void createMaterial() {
         IGPUImage t = null;
         try {
-            t = IGPUImage.read(Wall.class.getResource("/assets/textures/Microscheme2.jpg"));
             t = IGPUImage.read(Wall.class.getResource("/textures/tron_wall.jpg"));
         } catch (IOException e) {
             e.printStackTrace();

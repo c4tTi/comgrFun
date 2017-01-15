@@ -39,6 +39,7 @@ import ch.fhnw.comgr.tron.ui.BikeTool;
 import ch.fhnw.comgr.tron.ui.Grid;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
+import ch.fhnw.ether.image.IGPUImage;
 import ch.fhnw.ether.platform.Platform;
 import ch.fhnw.ether.render.IRenderManager;
 import ch.fhnw.ether.scene.DefaultScene;
@@ -47,6 +48,7 @@ import ch.fhnw.ether.scene.camera.ICamera;
 import ch.fhnw.ether.scene.light.DirectionalLight;
 import ch.fhnw.ether.scene.light.ILight;
 import ch.fhnw.ether.scene.mesh.IMesh;
+import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.view.DefaultView;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.AutoDisposer;
@@ -109,7 +111,6 @@ public class TronTeam {
             controller.setScene(scene);
             controller.setTool(bikeTool);
 
-
             IMesh grid = Grid.createSquareMapStandardMat(MAP_SIZE, (int) (MAP_SIZE / 2));
             controller.getScene().add3DObject(grid);
 
@@ -117,6 +118,15 @@ public class TronTeam {
             CreatePlayers(controller, bikeTool);
             CreateLights(scene);
         });
+    }
+
+    private void CreateGUI(IController controller, int window_width, int window_height) {
+        try {
+            IGPUImage t = IGPUImage.read(Grid.class.getResource("/textures/tron_floor.png"));
+            //controller.getScene().add3DObject(MeshUtilities.createScreenRectangle(0,0,window_width,window_height, RGBA.CYAN, t ));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void CreateLights(IScene scene) {
@@ -136,6 +146,8 @@ public class TronTeam {
 
         int window_width = full_width / NR_OF_TEAMS;
         int window_height = full_height / TEAM_SIZES;
+
+        CreateGUI(controller, window_width, window_height);
 
         for (int i  = 0; i < NR_OF_TEAMS; i++)
         {
