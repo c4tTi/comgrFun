@@ -106,7 +106,7 @@ public class TronTeam {
             controller.setTool(bikeTool);
 
 
-            IMesh grid = Grid.makeGrid();
+            IMesh grid = Grid.createSquareMapStandardMat(400f, 200);
             controller.getScene().add3DObject(grid);
 
             CreatePlayers(controller, bikeTool);
