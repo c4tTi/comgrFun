@@ -122,8 +122,27 @@ public class TronTeam {
 
     private void CreateGUI(IController controller, int window_width, int window_height) {
         try {
-            IGPUImage t = IGPUImage.read(Grid.class.getResource("/textures/tron_floor.png"));
-            //controller.getScene().add3DObject(MeshUtilities.createScreenRectangle(0,0,window_width,window_height, RGBA.CYAN, t ));
+            int s = 32;
+
+            IGPUImage tl = IGPUImage.read(Grid.class.getResource("/assets/gui/border_top_left.png"));
+            IGPUImage t  = IGPUImage.read(Grid.class.getResource("/assets/gui/border_top.png"));
+            IGPUImage tr = IGPUImage.read(Grid.class.getResource("/assets/gui/border_top_right.png"));
+            IGPUImage r  = IGPUImage.read(Grid.class.getResource("/assets/gui/border_right.png"));
+            IGPUImage bl = IGPUImage.read(Grid.class.getResource("/assets/gui/border_bottom_left.png"));
+            IGPUImage b  = IGPUImage.read(Grid.class.getResource("/assets/gui/border_bottom.png"));
+            IGPUImage br = IGPUImage.read(Grid.class.getResource("/assets/gui/border_bottom_right.png"));
+            IGPUImage l  = IGPUImage.read(Grid.class.getResource("/assets/gui/border_left.png"));
+
+            controller.getScene().add3DObject(MeshUtilities.createScreenRectangle(0, 0, s, s, RGBA.CYAN, bl));
+            controller.getScene().add3DObject(MeshUtilities.createScreenRectangle(s, 0, window_width - s, s, RGBA.CYAN, b));
+            controller.getScene().add3DObject(MeshUtilities.createScreenRectangle(window_width - s,0,window_width,s, RGBA.CYAN, br));
+
+            controller.getScene().add3DObject(MeshUtilities.createScreenRectangle(0, window_height - s, s, window_height, RGBA.CYAN, tl));
+            controller.getScene().add3DObject(MeshUtilities.createScreenRectangle(s, window_height - s, window_width - s, window_height, RGBA.CYAN, t));
+            controller.getScene().add3DObject(MeshUtilities.createScreenRectangle(window_width - s, window_height - s, window_width, window_height, RGBA.CYAN, tr));
+
+            controller.getScene().add3DObject(MeshUtilities.createScreenRectangle(0,s,s,window_height-s, RGBA.CYAN, l));
+            controller.getScene().add3DObject(MeshUtilities.createScreenRectangle(window_width-s,s,window_width,window_height-s, RGBA.CYAN, r));
         } catch (IOException e) {
             e.printStackTrace();
         }

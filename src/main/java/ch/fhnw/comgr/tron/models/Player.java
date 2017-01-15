@@ -5,18 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.fhnw.comgr.tron.ui.BikeTool;
-import ch.fhnw.comgr.tron.ui.Grid;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.formats.obj.ObjReader;
-import ch.fhnw.ether.image.IGPUImage;
 import ch.fhnw.ether.scene.camera.DefaultCameraControl;
 import ch.fhnw.ether.scene.camera.ICamera;
 import ch.fhnw.ether.scene.light.PointLight;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.view.IView;
-import ch.fhnw.util.color.RGB;
-import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 import ch.fhnw.util.math.geometry.BoundingBox;
