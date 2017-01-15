@@ -52,7 +52,7 @@ public class BikeTool implements ITool{
 		
 		//Check for collision between players
 		for(Player otherPlayer : players) {
-			if(player != otherPlayer && player.collidedWithPlayer(otherPlayer)) {
+			if(player != otherPlayer && !otherPlayer.isDead() && player.collidedWithPlayer(otherPlayer)) {
 				player.die();
 				otherPlayer.die();
 			}

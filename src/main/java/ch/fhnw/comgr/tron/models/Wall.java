@@ -85,7 +85,7 @@ public class Wall {
 
         controller.animate((time, interval) -> {
             // TODO: use squared distance maybe
-            if (playerA.calculateDistance(playerB) < MAX_BIND_DISTANCE) {
+            if (!playerA.isDead() && !playerB.isDead() && playerA.calculateDistance(playerB) < MAX_BIND_DISTANCE) {
                 addWallEdge(playerA.getPointBetween(playerB));
             } else {
                 stopWallBuilding();

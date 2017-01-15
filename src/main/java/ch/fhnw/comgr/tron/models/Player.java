@@ -112,7 +112,7 @@ public class Player {
 	/**
 	 * Calculates and returns the distance between this and player p.
 	 */
-	public float calculateDistance(Player p) {
+	public float calculateDistance(Player p) {		
 		return (float) Math.sqrt(((position.x - p.getPosition().x) * (position.x - p.getPosition().x))
 				+ ((position.y - p.getPosition().y) * (position.y - p.getPosition().y)));
 	}
@@ -140,6 +140,7 @@ public class Player {
 	public void die() {
 		dead = true;
 		controller.getScene().remove3DObject(bike);
+		this.team.RemovePlayer(this);
 		explode();
 	}
 	
@@ -177,4 +178,6 @@ public class Player {
     public int getRightKey() { return rightKey; }
     
     public Team getTeam() { return team; }
+    
+    public boolean isDead() { return dead; }
 }

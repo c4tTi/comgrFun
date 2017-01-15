@@ -24,6 +24,13 @@ public class Team {
     {
         players.add(p);
     }
+    
+    public void RemovePlayer(Player p) {
+    	players.remove(p);
+    	if (players.size() < 2) {
+    		System.out.println("GAME OVER");
+    	}
+    }
 
     public RGBA getTeamColor() {
         return teamColor;
