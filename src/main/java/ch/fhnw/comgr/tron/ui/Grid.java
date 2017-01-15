@@ -3,12 +3,15 @@ package ch.fhnw.comgr.tron.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.fhnw.ether.image.IGPUImage;
 import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.scene.mesh.IMesh.Primitive;
 import ch.fhnw.ether.scene.mesh.IMesh.Queue;
 import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
+import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
+import ch.fhnw.ether.scene.mesh.material.IMaterial;
 import ch.fhnw.ether.scene.mesh.material.LineMaterial;
 import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Vec3;
@@ -38,4 +41,43 @@ public class Grid {
 		return new DefaultMesh(Primitive.LINES, new LineMaterial(RGBA.GRAY), DefaultGeometry.createV(Vec3.toArray(lines)), Queue.TRANSPARENCY);
 	}
 
+	
+	public static IMesh createSquareMapStandardMat(float lengthMap, int materialCount){
+		
+		try {
+			IGPUImage t = IGPUImage.read(Grid.class.getResource("/textures/tron_floor.png"));
+			//IMaterial m = new ColorMapMaterial();
+			IMaterial m = new ColorMapMaterial(RGBA.WHITE, t, false);
+
+			return createSquareMap(lengthMap, m, materialCount);
+			
+			//scene.add3DObjects(createSquareMap(100f, m, 100));
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("cant load image");
+			System.exit(1);
+		}
+		return null;		
+	} 
+	
+	public static IMesh createSquareMap(float lengthMap, IMaterial material, int materialCount){
+		//how long is one sub Mesh?
+		float materialLength = lengthMap/ (float) (materialCount);
+		System.out.println(materialLength);
+		IMesh meshToInstanciate = MeshUtilities.createGroundPlane(material, materialLength);
+		List<IMesh> myMeshes = new ArrayList<IMesh>();
+		for(int x = 0; x < materialCount; x ++){
+			for (int y = 0; y < materialCount; y++)
+			{
+				IMesh myMesh = meshToInstanciate.createInstance();
+				myMesh.setPosition(new Vec3(materialLength * x * 2 , materialLength * y * 2 ,0f));
+				myMeshes.add(myMesh);
+			}
+		}
+		IMesh myReturnMesh = MeshUtilities.mergeMeshes(myMeshes).get(0);
+		myReturnMesh.setPosition(new Vec3(-lengthMap,-lengthMap , 0));
+		
+		return myReturnMesh;
+	} 
+	
 }
