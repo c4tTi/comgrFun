@@ -27,7 +27,6 @@ public class Player {
     private final BikeTool bikeTool;
     private final IView view;
     private final ICamera cam;
-    private final DefaultCameraControl cameraControl;
     private final Team team;
 
     private IMesh bike;
@@ -49,9 +48,7 @@ public class Player {
         this.cam = cam;
         this.team = team;
         
-        
 
-        this.cameraControl = new DefaultCameraControl(cam);
         this.leftKey = leftKey;
         this.rightKey = rightKey;
         this.bikeTool = bikeTool;
@@ -70,7 +67,7 @@ public class Player {
         controller.getScene().add3DObject(bike);
         controller.getScene().add3DObject(light);
 
-        controller.animate((time, interval) -> {  
+        controller.animate((time, interval) -> {
         	if(dead) {
         		if(exploding) {
         			if(explosionFrame < ExplosionParticle.MAX_LIFESPAN) {
@@ -93,7 +90,7 @@ public class Player {
 	        	cam.setPosition(position.add(new Vec3(-x, -y, CAMERA_HEIGHT)));
 	            cam.setTarget(position);
 	            //System.out.println("Position: " + (int) position.x + "/" + (int) position.y);
-	            
+
 	            float xLight = (float) (Math.cos(Math.toRadians(rotationAngle)) * 7);
 	        	float yLight = (float) (Math.sin(Math.toRadians(rotationAngle)) * 7);
 	            light.setPosition(position.add(new Vec3(xLight, yLight,2)));

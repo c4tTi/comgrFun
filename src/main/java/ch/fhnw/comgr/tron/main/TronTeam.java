@@ -198,7 +198,6 @@ public class TronTeam {
                 playerOffset*window_height,
                 window_width, window_height,
                 IView.RENDER_VIEW, "Player " + playerIndex);
-        renderManager.getCamera(view);
 
         final ICamera cam = renderManager.getCamera(view);
         
