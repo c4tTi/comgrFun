@@ -32,6 +32,7 @@ package ch.fhnw.comgr.tron.main;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
+import ch.fhnw.comgr.tron.models.BorderWall;
 import ch.fhnw.comgr.tron.models.Player;
 import ch.fhnw.comgr.tron.models.Team;
 import ch.fhnw.comgr.tron.ui.BikeTool;
@@ -58,6 +59,7 @@ public class TronTeam {
     private static final int TEAM_SIZES = 2;
     private static final int NR_OF_TEAMS = 2;
     private static final int NR_PLAYERS = NR_OF_TEAMS * TEAM_SIZES;
+    private static final float MAP_SIZE = 50f;
     private static final int[] KEYS = {KeyEvent.VK_Q, KeyEvent.VK_W, KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_O, KeyEvent.VK_P, KeyEvent.VK_N, KeyEvent.VK_M};
     private static final RGBA[] teamColors = new RGBA[]{ RGBA.GREEN, RGBA.BLUE, RGBA.RED, RGBA.CYAN};
 
@@ -98,7 +100,7 @@ public class TronTeam {
         teams = new Team[NR_OF_TEAMS];
         players = new Player[NR_PLAYERS];
         
-        final BikeTool bikeTool = new BikeTool(players, teams);
+        final BikeTool bikeTool = new BikeTool(MAP_SIZE, players, teams);
 
         controller.run(time -> {
             IScene scene = new DefaultScene(controller);
@@ -106,9 +108,10 @@ public class TronTeam {
             controller.setTool(bikeTool);
 
 
-            IMesh grid = Grid.createSquareMapStandardMat(400f, 200);
+            IMesh grid = Grid.createSquareMapStandardMat(MAP_SIZE, (int) (MAP_SIZE / 2));
             controller.getScene().add3DObject(grid);
 
+            CreateBorderWalls(controller);
             CreatePlayers(controller, bikeTool);
             CreateLights(scene);
         });
@@ -117,6 +120,10 @@ public class TronTeam {
     private void CreateLights(IScene scene) {
         ILight light = new PointLight(new Vec3(0, -5, 10), RGB.BLACK, RGB.WHITE);
         scene.add3DObject(light);
+    }
+    
+    private void CreateBorderWalls(IController controller) {
+    	new BorderWall(controller, MAP_SIZE);
     }
 
     private void CreatePlayers(IController controller, BikeTool bikeTool) {

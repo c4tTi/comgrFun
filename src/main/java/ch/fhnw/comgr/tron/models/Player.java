@@ -20,8 +20,6 @@ import ch.fhnw.util.math.geometry.BoundingBox;
  * Created by Serquet.
  */
 public class Player {
-	private static final float BIKE_WIDTH = 3.2f;
-	private static final float BIKE_LENGTH = 0.9f;
 	private static final int CAMERA_DISTANCE = 20;
 	private static final int CAMERA_HEIGHT = 10;
     private final IController controller;
@@ -62,9 +60,8 @@ public class Player {
     	bike.setPosition(position);
         controller.getScene().add3DObject(bike);
 
-        controller.animate((time, interval) -> {   
+        controller.animate((time, interval) -> {  
         	if(dead) {
-        		System.out.println("lul u ded");
         	}
         	else {
 	        	Mat4 trans = bikeTool.update(this);

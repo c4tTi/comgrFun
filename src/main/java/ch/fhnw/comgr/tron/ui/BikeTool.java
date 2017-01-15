@@ -2,6 +2,7 @@ package ch.fhnw.comgr.tron.ui;
 
 import java.util.ArrayList;
 
+import ch.fhnw.comgr.tron.models.BorderWall;
 import ch.fhnw.comgr.tron.models.Player;
 import ch.fhnw.comgr.tron.models.Team;
 import ch.fhnw.comgr.tron.models.Wall;
@@ -17,10 +18,12 @@ public class BikeTool implements ITool{
 	private static final float TURNING_SPEED = 2f;
 	private static final float SPEED = 0.2f;
 	private static final float MAX_CURVE_LEAN_ANGLE = 30;
+	private float mapSize;
 	Player[] players;
 	Team[] teams;
 	
-	public BikeTool(Player[] players, Team[] teams) {
+	public BikeTool(float mapSize, Player[] players, Team[] teams) {
+		this.mapSize = mapSize;
 		this.players = players;
 		this.teams = teams;
 	}
@@ -62,6 +65,14 @@ public class BikeTool implements ITool{
 					player.die();
 				}
 			}
+		}
+		
+		// Check for collision with map border
+		if(player.getBoundingBox().getMaxX() > mapSize - BorderWall.TEXTURE_OFFSET
+				|| player.getBoundingBox().getMinX() < -mapSize - BorderWall.TEXTURE_OFFSET
+				|| player.getBoundingBox().getMaxY() > mapSize - BorderWall.TEXTURE_OFFSET
+				|| player.getBoundingBox().getMinY() < -mapSize - BorderWall.TEXTURE_OFFSET) {
+			player.die();
 		}
 		
 		Mat4 trans = player.getTransforma();

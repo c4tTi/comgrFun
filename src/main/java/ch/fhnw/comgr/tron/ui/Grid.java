@@ -78,6 +78,6 @@ public class Grid {
 		myReturnMesh.setPosition(new Vec3(-lengthMap,-lengthMap , 0));
 		
 		return myReturnMesh;
-	} 
+	}
 	
 }
