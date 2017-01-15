@@ -41,10 +41,10 @@ public class Player {
     private int explosionFrame;
     ExplosionParticle[] explosionParticles;
     private int leftKey, rightKey;
+    private final int playerIndex;
 
-    private static int i;
 
-    public Player(IController controller, IView view, ICamera cam, Team team, int leftKey, int rightKey, BikeTool bikeTool) {
+    public Player(IController controller, IView view, ICamera cam, Team team, int leftKey, int rightKey, BikeTool bikeTool, Vec3 pos, int playerIndex) {
         this.controller = controller;
         this.view = view;
         this.cam = cam;
@@ -56,9 +56,12 @@ public class Player {
         this.leftKey = leftKey;
         this.rightKey = rightKey;
         this.bikeTool = bikeTool;
-        position = new Vec3(0,10*i,0);
+        position = pos;
     	rotationAngle = 0;
-    	i++;
+    	
+    	this.playerIndex = playerIndex;
+    	this.rotationAngle = -90 * playerIndex;
+    	
     }
 
     public void enable() throws IOException {
@@ -110,7 +113,7 @@ public class Player {
 	/**
 	 * Calculates and returns the distance between this and player p.
 	 */
-	public float calculateDistance(Player p) {
+	public float calculateDistance(Player p) {		
 		return (float) Math.sqrt(((position.x - p.getPosition().x) * (position.x - p.getPosition().x))
 				+ ((position.y - p.getPosition().y) * (position.y - p.getPosition().y)));
 	}
@@ -139,6 +142,7 @@ public class Player {
 		dead = true;
 		controller.getScene().remove3DObject(bike);
 		controller.getScene().remove3DObject(light);
+		this.team.RemovePlayer(this);
 		explode();
 	}
 	
@@ -176,4 +180,6 @@ public class Player {
     public int getRightKey() { return rightKey; }
     
     public Team getTeam() { return team; }
+    
+    public boolean isDead() { return dead; }
 }
