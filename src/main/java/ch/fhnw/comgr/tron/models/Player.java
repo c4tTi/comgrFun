@@ -37,10 +37,10 @@ public class Player {
     private boolean isTurningLeft, isTurningRight;
     private boolean dead;
     private int leftKey, rightKey;
+    private final int playerIndex;
 
-    private static int i;
 
-    public Player(IController controller, IView view, ICamera cam, Team team, int leftKey, int rightKey, BikeTool bikeTool) {
+    public Player(IController controller, IView view, ICamera cam, Team team, int leftKey, int rightKey, BikeTool bikeTool, Vec3 pos, int playerIndex) {
         this.controller = controller;
         this.view = view;
         this.cam = cam;
@@ -50,15 +50,18 @@ public class Player {
         this.leftKey = leftKey;
         this.rightKey = rightKey;
         this.bikeTool = bikeTool;
-        position = new Vec3(0,10*i,0);
+        position = pos;
     	rotationAngle = 0;
-    	i++;
+    	
+    	this.playerIndex = playerIndex;
+    	this.rotationAngle = -90 * playerIndex;
+    	
     }
 
     public void enable() throws IOException {
         bike = LoadBikeModel();
     	bike.setPosition(position);
-        controller.getScene().add3DObject(bike);
+        controller.getScene().add3DObject(bike);        
 
         controller.animate((time, interval) -> {  
         	if(dead) {

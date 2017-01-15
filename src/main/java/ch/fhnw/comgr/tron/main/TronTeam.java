@@ -54,6 +54,7 @@ import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.AutoDisposer;
 import ch.fhnw.util.color.RGB;
 import ch.fhnw.util.color.RGBA;
+import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 
 public class TronTeam {
@@ -63,6 +64,7 @@ public class TronTeam {
     private static final int NR_PLAYERS = NR_OF_TEAMS * TEAM_SIZES;
     private static final float MAP_SIZE = 50f;
     private static final int[] KEYS = {KeyEvent.VK_Q, KeyEvent.VK_W, KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_O, KeyEvent.VK_P, KeyEvent.VK_N, KeyEvent.VK_M};
+    private static final Vec3[] START_POS = { new Vec3(-MAP_SIZE/2, MAP_SIZE/2, 0), new Vec3(MAP_SIZE/2, MAP_SIZE/2, 0), new Vec3(MAP_SIZE/2, -MAP_SIZE/2, 0), new Vec3(-MAP_SIZE/2, -MAP_SIZE/2, 0)};
     private static final RGBA[] teamColors = new RGBA[]{ RGBA.GREEN, RGBA.BLUE, RGBA.RED, RGBA.CYAN};
 
     private final Team[] teams;
@@ -173,7 +175,8 @@ public class TronTeam {
         renderManager.getCamera(view);
 
         final ICamera cam = renderManager.getCamera(view);
-        Player player = new Player(controller, view, cam, teams[teamOffset], leftKey, rightKey, bikeTool);
+        
+        Player player = new Player(controller, view, cam, teams[teamOffset], leftKey, rightKey, bikeTool, START_POS[playerIndex], playerIndex);
         players[playerIndex] = player;
         teams[teamOffset].AddPlayer(player);
         player.enable();
