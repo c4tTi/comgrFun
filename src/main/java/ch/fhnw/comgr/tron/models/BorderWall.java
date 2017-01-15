@@ -34,10 +34,30 @@ public class BorderWall {
 			for(int i = 0; i < colors.length; i++) {
 				colors[i] = 1f;
 			}
-			float[] texCoords = new float[6*2];
-			for(int i = 0; i < texCoords.length; i++) {
-				texCoords[i] = 1f;
-			}
+			//float[] texCoords = new float[6*2];
+//			for(int i = 0; i < texCoords.length; i++) {
+//				texCoords[i] = 1f;
+//			}
+
+			int texOffset = (int) mapSize/25;
+
+			float[] texCoordsOne = {
+					0, 0,
+					0, texOffset,
+					2*texOffset, texOffset,
+					0, 0,
+					2*texOffset, texOffset,
+					2*texOffset, 0,
+			};
+			float[] texCoordsTwo = {
+					2*texOffset, texOffset,
+					0, texOffset,
+					0, 0,
+
+					2*texOffset, 0,
+					2*texOffset, texOffset,
+					0, 0,
+			};
 			
 			
 			float[] v0 = {
@@ -49,12 +69,12 @@ public class BorderWall {
 					mapSize - TEXTURE_OFFSET, -mapSize - TEXTURE_OFFSET, 0f
 			};
 			float[] v1 = {
-					-mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, 0f,
+					mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, WALL_HEIGHT,
 					-mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, WALL_HEIGHT,
+					-mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, 0f,
+					mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, 0f,
 					mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, WALL_HEIGHT,
 					-mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, 0f,
-					mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, WALL_HEIGHT,
-					mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, 0f
 			};
 			float[] v2 = {
 					mapSize - TEXTURE_OFFSET, -mapSize - TEXTURE_OFFSET, 0f,
@@ -65,12 +85,12 @@ public class BorderWall {
 					mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, 0f
 			};
 			float[] v3 = {
-					-mapSize - TEXTURE_OFFSET, -mapSize - TEXTURE_OFFSET, 0f,
+					-mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, WALL_HEIGHT,
 					-mapSize - TEXTURE_OFFSET, -mapSize - TEXTURE_OFFSET, WALL_HEIGHT,
+					-mapSize - TEXTURE_OFFSET, -mapSize - TEXTURE_OFFSET, 0f,
+					-mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, 0f,
 					-mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, WALL_HEIGHT,
 					-mapSize - TEXTURE_OFFSET, -mapSize - TEXTURE_OFFSET, 0f,
-					-mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, WALL_HEIGHT,
-					-mapSize - TEXTURE_OFFSET, mapSize - TEXTURE_OFFSET, 0f
 			};
 			wallVertices[0] = v0;
 			wallVertices[1] = v1;
@@ -79,7 +99,7 @@ public class BorderWall {
 			
 			
 			for(int i = 0; i < wallVertices.length; i++) {
-				wall[i] = new DefaultMesh(IMesh.Primitive.TRIANGLES, material, DefaultGeometry.createVCM(wallVertices[i], colors, texCoords), IMesh.Queue.DEPTH, Flag.DONT_CULL_FACE);
+				wall[i] = new DefaultMesh(IMesh.Primitive.TRIANGLES, material, DefaultGeometry.createVCM(wallVertices[i], colors,(i%2 == 0) ? texCoordsOne : texCoordsTwo), IMesh.Queue.DEPTH);
 				controller.getScene().add3DObjects(wall[i]);
 			}
 			
