@@ -40,9 +40,10 @@ public class Player {
     ExplosionParticle[] explosionParticles;
     private int leftKey, rightKey;
     private final int playerIndex;
+	private boolean isStopped = false;
 
 
-    public Player(IController controller, IView view, ICamera cam, Team team, int leftKey, int rightKey, BikeTool bikeTool, Vec3 pos, int playerIndex) {
+	public Player(IController controller, IView view, ICamera cam, Team team, int leftKey, int rightKey, BikeTool bikeTool, Vec3 pos, int playerIndex) {
         this.controller = controller;
         this.view = view;
         this.cam = cam;
@@ -86,7 +87,7 @@ public class Player {
 						exploding = false;
 					}
 				}
-			} else {
+			} else if (!isStopped){
 				Mat4 trans = bikeTool.update(this);
 				bike.setTransform(Mat4.multiply(Mat4.rotate(rotationAngle, Vec3.Z), Mat4.rotate(curveLeanAngle, Vec3.X)));
 
@@ -96,6 +97,10 @@ public class Player {
 				bike.setPosition(position);
 			}
 		});
+	}
+
+	public void stop() {
+		isStopped = true;
 	}
 
 	private void updateCamera() {

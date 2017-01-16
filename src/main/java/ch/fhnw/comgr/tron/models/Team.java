@@ -1,8 +1,9 @@
 package ch.fhnw.comgr.tron.models;
 
+import ch.fhnw.comgr.tron.main.TronTeam;
 import ch.fhnw.ether.controller.IController;
+import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.util.color.RGBA;
-import ch.fhnw.util.math.Vec3;
 
 import java.util.ArrayList;
 
@@ -14,10 +15,12 @@ public class Team {
     private final RGBA teamColor;
     private final ArrayList<Player> players = new ArrayList<>();
     private final ArrayList<Wall> walls = new ArrayList<>();
+    private final TronTeam main;
 
-    public Team(IController controller, RGBA teamColor) {
+    public Team(IController controller, RGBA teamColor, TronTeam main) {
         this.controller = controller;
         this.teamColor = teamColor;
+        this.main = main;
     }
 
     public void AddPlayer(Player p)
@@ -29,6 +32,8 @@ public class Team {
     	players.remove(p);
     	if (players.size() < 2) {
     		System.out.println("GAME OVER");
+
+            main.onGameOver();
     	}
     }
 

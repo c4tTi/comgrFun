@@ -70,6 +70,9 @@ public class TronTeam {
 
     private final Team[] teams;
     private final Player[] players;
+    private final IController controller;
+    private IMesh gameOverMesh;
+    private boolean gameOver = false;
 
 
     public static void main(String[] args) {
@@ -99,7 +102,7 @@ public class TronTeam {
     }
 
     public TronTeam() throws IOException {
-        final IController controller = new DefaultController();
+        controller = new DefaultController();
 
         teams = new Team[NR_OF_TEAMS];
         players = new Player[NR_PLAYERS];
@@ -127,6 +130,18 @@ public class TronTeam {
             }
         }
 
+
+        // game over
+        try {
+            IGPUImage gameOver = IGPUImage.read(TronTeam.class.getResource("/assets/gui/game_over.png"));
+            gameOverMesh = MeshUtilities.createScreenRectangle(
+                                window_center_x-256, window_center_y-256,
+                                window_center_x+256, window_center_y+256,
+                                RGBA.CYAN, gameOver);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         controller.run(time -> {
             IScene scene = new DefaultScene(controller);
             controller.setScene(scene);
@@ -138,12 +153,25 @@ public class TronTeam {
             List<IMesh> skybox = Skybox.createSkybox(MAP_SIZE * 100, -MAP_SIZE *45);
             controller.getScene().add3DObjects(skybox);
 
+            CreateGUI(controller, window_width, window_height);
             CreateBorderWalls(controller);
             CreatePlayers(controller, bikeTool, window_width, window_height);
             CreateLights(scene);
         });
 
         startCoolDown(controller, cd);
+    }
+
+    public void onGameOver()
+    {
+        if (!gameOver) {
+            controller.getScene().add3DObject(gameOverMesh);
+            gameOver = true;
+
+            for (Player p : players) {
+                p.stop();
+            }
+        }
     }
 
     private void startCoolDown(IController controller, IMesh[] cd) {
@@ -210,11 +238,9 @@ public class TronTeam {
     private void CreatePlayers(IController controller, BikeTool bikeTool, int window_width, int window_height) {
         IRenderManager renderManager = controller.getRenderManager();
 
-        CreateGUI(controller, window_width, window_height);
-
         for (int i  = 0; i < NR_OF_TEAMS; i++)
         {
-            teams[i] = new Team(controller, teamColors[i]);
+            teams[i] = new Team(controller, teamColors[i], this);
         }
 
         for (int i = 0; i < NR_PLAYERS; i++) {
