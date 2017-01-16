@@ -31,7 +31,7 @@ public class BikeTool implements ITool{
 	/**
 	 * Updates position, rotation and wall bindings of given player.
 	 */
-	public Mat4 update(Player player) {
+	public void update(Player player) {
 		float x, y;
 		x = (float) (Math.cos(Math.toRadians(player.getRotationAngle())) * SPEED);
 		y = (float) (Math.sin(Math.toRadians(player.getRotationAngle())) * SPEED);
@@ -75,12 +75,8 @@ public class BikeTool implements ITool{
 			player.die();
 		}
 		
-		Mat4 trans = player.getTransforma();
 		Vec3 pos = new Vec3(x,y,0);
 		player.setPosition(player.getPosition().add(pos));
-		Mat4 move = Mat4.translate(pos);
-		
-		return Mat4.multiply(trans,move);
 	}
 	
 	@Override

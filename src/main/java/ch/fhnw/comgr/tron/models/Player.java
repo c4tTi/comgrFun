@@ -88,7 +88,7 @@ public class Player {
 					}
 				}
 			} else if (!isStopped){
-				Mat4 trans = bikeTool.update(this);
+				bikeTool.update(this);
 				bike.setTransform(Mat4.multiply(Mat4.rotate(rotationAngle, Vec3.Z), Mat4.rotate(curveLeanAngle, Vec3.X)));
 
 				updateCamera();
