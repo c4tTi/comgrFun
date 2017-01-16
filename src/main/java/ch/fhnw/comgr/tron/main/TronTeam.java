@@ -54,7 +54,6 @@ import ch.fhnw.ether.view.IView;
 import ch.fhnw.util.AutoDisposer;
 import ch.fhnw.util.color.RGB;
 import ch.fhnw.util.color.RGBA;
-import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 
 public class TronTeam {
@@ -99,12 +98,32 @@ public class TronTeam {
 
     public TronTeam() throws IOException {
         final IController controller = new DefaultController();
-       
 
         teams = new Team[NR_OF_TEAMS];
         players = new Player[NR_PLAYERS];
-        
+
+        final int full_width = Platform.get().getMonitors()[0].getWidth();
+        final int full_height = Platform.get().getMonitors()[0].getHeight();
+        final int window_width = full_width / NR_OF_TEAMS;
+        final int window_height = full_height / TEAM_SIZES;
+        final int window_center_x = window_width / 2;
+        final int window_center_y = window_height / 2;
+
         final BikeTool bikeTool = new BikeTool(MAP_SIZE, players, teams);
+
+        IMesh[] cd = new IMesh[4];
+        for (int i = 0; i < cd.length; i++)
+        {
+            try {
+                IGPUImage cdT = IGPUImage.read(TronTeam.class.getResource("/assets/gui/cd_" + i + ".png"));
+                cd[i] = MeshUtilities.createScreenRectangle(
+                        window_center_x-128, window_center_y-128,
+                        window_center_x+128, window_center_y+128,
+                        RGBA.CYAN, cdT);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         controller.run(time -> {
             IScene scene = new DefaultScene(controller);
@@ -115,23 +134,49 @@ public class TronTeam {
             controller.getScene().add3DObject(grid);
 
             CreateBorderWalls(controller);
-            CreatePlayers(controller, bikeTool);
+            CreatePlayers(controller, bikeTool, window_width, window_height);
             CreateLights(scene);
         });
+
+        startCoolDown(controller, cd);
+    }
+
+    private void startCoolDown(IController controller, IMesh[] cd) {
+
+        final int k = cd.length - 1;
+        for (int i = -1; i < cd.length; i++) {
+            final double delay = 0.9 * (cd.length - i);
+            final int cdIndex = i;
+            controller.run(delay, time -> {
+                if (cdIndex < k) {
+                    final IMesh toRemove = cd[cdIndex + 1];
+                    cd[cdIndex + 1] = null;
+                    controller.getScene().remove3DObject(toRemove);
+                }
+                if (cdIndex >= 0) {
+                    controller.getScene().add3DObject(cd[cdIndex]);
+                }
+                if (cdIndex == 0) {
+                    for (Player p : players) {
+                        p.start();
+                    }
+                }
+            });
+        }
     }
 
     private void CreateGUI(IController controller, int window_width, int window_height) {
         try {
             int s = 32;
 
-            IGPUImage tl = IGPUImage.read(Grid.class.getResource("/assets/gui/border_top_left.png"));
-            IGPUImage t  = IGPUImage.read(Grid.class.getResource("/assets/gui/border_top.png"));
-            IGPUImage tr = IGPUImage.read(Grid.class.getResource("/assets/gui/border_top_right.png"));
-            IGPUImage r  = IGPUImage.read(Grid.class.getResource("/assets/gui/border_right.png"));
-            IGPUImage bl = IGPUImage.read(Grid.class.getResource("/assets/gui/border_bottom_left.png"));
-            IGPUImage b  = IGPUImage.read(Grid.class.getResource("/assets/gui/border_bottom.png"));
-            IGPUImage br = IGPUImage.read(Grid.class.getResource("/assets/gui/border_bottom_right.png"));
-            IGPUImage l  = IGPUImage.read(Grid.class.getResource("/assets/gui/border_left.png"));
+            IGPUImage tl = IGPUImage.read(TronTeam.class.getResource("/assets/gui/border_top_left.png"));
+            IGPUImage t  = IGPUImage.read(TronTeam.class.getResource("/assets/gui/border_top.png"));
+            IGPUImage tr = IGPUImage.read(TronTeam.class.getResource("/assets/gui/border_top_right.png"));
+            IGPUImage r  = IGPUImage.read(TronTeam.class.getResource("/assets/gui/border_right.png"));
+            IGPUImage bl = IGPUImage.read(TronTeam.class.getResource("/assets/gui/border_bottom_left.png"));
+            IGPUImage b  = IGPUImage.read(TronTeam.class.getResource("/assets/gui/border_bottom.png"));
+            IGPUImage br = IGPUImage.read(TronTeam.class.getResource("/assets/gui/border_bottom_right.png"));
+            IGPUImage l  = IGPUImage.read(TronTeam.class.getResource("/assets/gui/border_left.png"));
 
             controller.getScene().add3DObject(MeshUtilities.createScreenRectangle(0, 0, s, s, RGBA.CYAN, bl));
             controller.getScene().add3DObject(MeshUtilities.createScreenRectangle(s, 0, window_width - s, s, RGBA.CYAN, b));
@@ -157,14 +202,8 @@ public class TronTeam {
     	new BorderWall(controller, MAP_SIZE);
     }
 
-    private void CreatePlayers(IController controller, BikeTool bikeTool) {
+    private void CreatePlayers(IController controller, BikeTool bikeTool, int window_width, int window_height) {
         IRenderManager renderManager = controller.getRenderManager();
-
-        int full_width = Platform.get().getMonitors()[0].getWidth();
-        int full_height = Platform.get().getMonitors()[0].getHeight();
-
-        int window_width = full_width / NR_OF_TEAMS;
-        int window_height = full_height / TEAM_SIZES;
 
         CreateGUI(controller, window_width, window_height);
 

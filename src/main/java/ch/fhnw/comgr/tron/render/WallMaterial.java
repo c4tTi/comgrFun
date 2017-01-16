@@ -30,7 +30,7 @@ public class WallMaterial extends AbstractMaterial implements ICustomMaterial {
 
             addUniform(new ViewUniformBlock());
             addUniform(new ColorMapUniform("lineMap", texture));
-            addUniform(new Vec4FloatUniform("tron.team_color", "teamColor"));
+            //addUniform(new Vec4FloatUniform("tron.team_color", "teamColor"));
             addUniform(new FloatUniform("tron.white_gain", "whiteGain"));
         }
     }
@@ -40,7 +40,7 @@ public class WallMaterial extends AbstractMaterial implements ICustomMaterial {
     private float whiteGain;
 
     public WallMaterial(IVec4 teamColor, IGPUImage texture) {
-        super(provide(new MaterialAttribute<IVec4>("tron.team_color"), new MaterialAttribute<Float>("tron.white_gain")), require(IGeometry.POSITION_ARRAY, IGeometry.COLOR_ARRAY, IGeometry.COLOR_MAP_ARRAY));
+        super(provide(new MaterialAttribute<Float>("tron.white_gain")), require(IGeometry.POSITION_ARRAY, IGeometry.COLOR_ARRAY, IGeometry.COLOR_MAP_ARRAY));
         this.teamColor = teamColor;
         shader = new WallShader(() -> texture);
     }
@@ -70,6 +70,6 @@ public class WallMaterial extends AbstractMaterial implements ICustomMaterial {
 
     @Override
     public Object[] getData() {
-        return data(teamColor, whiteGain);
+        return data(whiteGain);
     }
 }

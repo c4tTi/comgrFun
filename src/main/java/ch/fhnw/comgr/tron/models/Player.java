@@ -67,40 +67,51 @@ public class Player {
         controller.getScene().add3DObject(bike);
         controller.getScene().add3DObject(light);
 
-        controller.animate((time, interval) -> {
-        	if(dead) {
-        		if(exploding) {
-        			if(explosionFrame < ExplosionParticle.MAX_LIFESPAN) {
-        				explosionFrame++;
-        				for(int i = 0; i < explosionParticles.length; i++) {
-        					explosionParticles[i].update();
-        				}
-        			}
-        			else {
-        				exploding = false;
-        			}
-        		}
-        	}
-        	else {
-	        	Mat4 trans = bikeTool.update(this);
-                bike.setTransform(Mat4.multiply(Mat4.rotate(rotationAngle, Vec3.Z), Mat4.rotate(curveLeanAngle, Vec3.X)));
+		bike.setTransform(Mat4.multiply(Mat4.rotate(rotationAngle, Vec3.Z), Mat4.rotate(curveLeanAngle, Vec3.X)));
 
-	        	float x = (float) (Math.cos(Math.toRadians(rotationAngle)) * CAMERA_DISTANCE);
-	        	float y = (float) (Math.sin(Math.toRadians(rotationAngle)) * CAMERA_DISTANCE);
-	        	cam.setPosition(position.add(new Vec3(-x, -y, CAMERA_HEIGHT)));
-	            cam.setTarget(position);
-	            //System.out.println("Position: " + (int) position.x + "/" + (int) position.y);
-
-	            float xLight = (float) (Math.cos(Math.toRadians(rotationAngle)) * 7);
-	        	float yLight = (float) (Math.sin(Math.toRadians(rotationAngle)) * 7);
-	            light.setPosition(position.add(new Vec3(xLight, yLight,2)));
-                bike.setPosition(position);
-        	}
-        });
-
+		updateCamera();
+		updateLight();
     }
 
-    private IMesh LoadBikeModel() throws IOException {
+	public void start() {
+		controller.animate((time, interval) -> {
+			if (dead) {
+				if (exploding) {
+					if (explosionFrame < ExplosionParticle.MAX_LIFESPAN) {
+						explosionFrame++;
+						for (int i = 0; i < explosionParticles.length; i++) {
+							explosionParticles[i].update();
+						}
+					} else {
+						exploding = false;
+					}
+				}
+			} else {
+				Mat4 trans = bikeTool.update(this);
+				bike.setTransform(Mat4.multiply(Mat4.rotate(rotationAngle, Vec3.Z), Mat4.rotate(curveLeanAngle, Vec3.X)));
+
+				updateCamera();
+				updateLight();
+
+				bike.setPosition(position);
+			}
+		});
+	}
+
+	private void updateCamera() {
+		float x = (float) (Math.cos(Math.toRadians(rotationAngle)) * CAMERA_DISTANCE);
+		float y = (float) (Math.sin(Math.toRadians(rotationAngle)) * CAMERA_DISTANCE);
+		cam.setPosition(position.add(new Vec3(-x, -y, CAMERA_HEIGHT)));
+		cam.setTarget(position);
+	}
+
+	private void updateLight() {
+		float xLight = (float) (Math.cos(Math.toRadians(rotationAngle)) * 7);
+		float yLight = (float) (Math.sin(Math.toRadians(rotationAngle)) * 7);
+		light.setPosition(position.add(new Vec3(xLight, yLight, 2)));
+	}
+
+	private IMesh LoadBikeModel() throws IOException {
         final List<IMesh> meshes = new ArrayList<>();
         new ObjReader(getClass().getResource("/assets/Bike/Tron.obj")).getMeshes().forEach(meshes::add);
         return MeshUtilities.mergeMeshes(meshes).get(0);
